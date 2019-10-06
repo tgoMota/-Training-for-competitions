@@ -1,5 +1,5 @@
 //https://codeforces.com/problemset/problem/706/C
-//"C. Hard problem"
+//"C. Hard problem" || CodeForces
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f3f3f3f3f
