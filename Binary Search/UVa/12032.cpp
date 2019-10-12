@@ -12,6 +12,7 @@ bool can(int mid){
     }
     return true;
 }
+
 int main(){
     cin >> t;
     while(t--){
