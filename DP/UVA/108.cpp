@@ -1,4 +1,4 @@
-https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=44
+//https:uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=44
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
