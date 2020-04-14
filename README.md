@@ -1,5 +1,4 @@
-# Competitive-programming
+# Training-for-competitions
+Some problems I solved by training for programming marathons.
 
-Some problems I solved by training for programming competitions.
-
-                Developed by: Thiago Mota Carvalho
+Developed by: Thiago Mota Carvalho
