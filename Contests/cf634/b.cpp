@@ -8,24 +8,26 @@ using namespace std;
 typedef long long ll;
 typedef vector<pair<int,int>> vii;
 typedef pair<int,int> pii;
-
-long long findDigits(int n) 
-{ 
-    if (n < 0)  return 0; 
-    if (n <= 1) return 1; 
-  
-    double x = ((n * log10(n / M_E) +  
-                 log10(2 * M_PI * n) / 
-                 2.0)); 
-  
-    return floor(x) + 1; 
-} 
-
+ 
+ 
 int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-
+        int n, a, b;
+        cin >> n >> a >> b;
+        string ans = "";
+        for(int i = 0, cnt = 0; i < n; ++i){
+            char ch = 'a'+cnt;
+            if(cnt >= b){
+                ans+='a';
+            }else{
+                ans+=ch;
+            }      
+            cnt++;
+            if(cnt == a) cnt = 0;
+        }
+        cout << ans << endl;
     }
     return 0;
 }

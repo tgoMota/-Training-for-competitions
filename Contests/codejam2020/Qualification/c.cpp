@@ -50,10 +50,7 @@ int main(){
     int t, n;
     cin >> t;
     for(int ti = 1; ti <= t ; ++ti){
-        vector<pair<pair<int,int>, int>> v;
-        //360 480
-        //420 540
-        //600 660
+        vector<pair<pair<int,int>, int>> v;s
         cin >> n;
         for(int i = 0; i < n ; ++i){
             int a, b;

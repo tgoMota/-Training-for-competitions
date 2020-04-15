@@ -8,9 +8,9 @@ typedef long long ll;
 typedef vector<pair<int,int>> vii;
 typedef pair<int,int> pii;
 
-void quotientremainder(string num, ll m) {
+void rest(string num, ll m) {
    vector<int> vec;
-   ll mod = 0;
+   ll mod = 0LL;
    for (int i = 0; i < num.size(); i++) {
       int digit = num[i] - '0';
       mod = mod * 10 + digit;
@@ -25,6 +25,6 @@ int main(){
        cin >> a;
        ll b;
        cin >> b;
-       quotientremainder(a,b);
+       rest(a,b);
     return 0;
 }

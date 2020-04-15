@@ -8,24 +8,27 @@ using namespace std;
 typedef long long ll;
 typedef vector<pair<int,int>> vii;
 typedef pair<int,int> pii;
-
-long long findDigits(int n) 
-{ 
-    if (n < 0)  return 0; 
-    if (n <= 1) return 1; 
-  
-    double x = ((n * log10(n / M_E) +  
-                 log10(2 * M_PI * n) / 
-                 2.0)); 
-  
-    return floor(x) + 1; 
-} 
-
+map<int,int> g1;
+ 
 int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-
+        int n;
+        scanf("%d", &n);
+        vector<int> v(n);
+        for(int i= 0; i < n ; ++i) {
+           scanf("%d", &v[i]);
+           if(g1.find(v[i]) == g1.end()) g1[v[i]] = 1;
+           else g1[v[i]]++;
+        }
+        int a = g1.size()-1, b = 0;
+        for(auto x : g1) {
+            b = max(b, x.second);
+        }
+        if(b > a+1) printf("%d\n", min(a+1,b));
+        else printf("%d\n", min(a, b));
+        g1.clear();
     }
     return 0;
 }
