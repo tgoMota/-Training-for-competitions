@@ -16,7 +16,7 @@ int pd(int t){
     return ans;
 }
 
-//Segundo Modo de fazer
+//Other way to solve...
 // int pd(int t){
 //     if(t == 0) return 0;
 //     if(t < 0) return -oo;

@@ -9,8 +9,8 @@ int main(){
     string data;
     for(int ti = 1; ti <= t ; ++ti){
         cin >> data;
-        stack<char> st; //101 => (1)0(1)
-        for(int i = 0; i < data.length() ;i++){ //101 => //(
+        stack<char> st; 
+        for(int i = 0; i < data.length() ;i++){ 
             if(data[i] == '(' || data[i] == ')') continue;
             int num = data[i] - '0';
             while(st.size() > num){
@@ -19,7 +19,7 @@ int main(){
                 i++;
             }
             while(st.size() < num){
-                data.insert(data.begin()+i, '('); //(101 => (1)0(1)
+                data.insert(data.begin()+i, '(');
                 st.push('(');
                 i++;
             }
