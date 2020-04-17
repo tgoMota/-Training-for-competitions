@@ -9,22 +9,19 @@ typedef vector<pair<int,int>> vii;
 typedef pair<int,int> pii;
 
 void rest(string num, ll m) {
-   vector<int> vec;
    ll mod = 0LL;
    for (int i = 0; i < num.size(); i++) {
       int digit = num[i] - '0';
       mod = mod * 10 + digit;
-      int quo = mod / m;
-      vec.push_back(quo);
       mod = mod % m;
    }
    printf("%lld\n", mod);
 }
 int main(){
-       string a;
-       cin >> a;
-       ll b;
-       cin >> b;
-       rest(a,b);
+    string a;
+    cin >> a;
+    ll b;
+    cin >> b;
+    rest(a,b);
     return 0;
 }
