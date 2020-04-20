@@ -3,87 +3,42 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
-struct p {
-  int a, b, c;
-  p(int a, int b, int c) : a(a), b(b), c(c) {}
-};
+typedef long long ll;
 
-int dp(int ind, vector<int> all){
-    
+bool cmp(pair<int,pair<int,int>>& a, pair<int,pair<int,int>>& b){
+    if(a.second.first < b.second.first && a.second.second < b.second.second) return true;
 }
-
-int main() {
-
-    int n, a, b, c, sum = 0;
-    vector<p> vet;
-    scanf("%d", &n);
-    for (int i = 0; i < n; ++i) {
+int main(){
+    int N;
+    scanf("%d", &N);
+    vector<pair<int,pair<int,int>>> v;
+    for(int i = 0; i < N ; ++i){
+        int a, b, c;
         scanf("%d%d%d", &a, &b, &c);
-        vet.push_back({a,b,c});
+        v.push_back({c,{a,b}});
+
     }
-    for (int i = 0; i < vet.size(); ++i) {
-        for (int j = 0; j < vet.size(); ++j) {
-            if(i == j || (vet[j].a == vet[j].b && vet[i].a == vet[i].b)) continue;
-            if((vet[i].a >= vet[j].a && vet[i].b >= vet[j].b) || (vet[i].a <= vet[j].a && vet[i].b <= vet[j].b)) continue;
-            if(vet[i].c > vet[j].c){
-                printf("Apagando: %d %d %d\n", vet[j].a , vet[j].b, vet[j].c);
-                vet.erase(vet.begin()+j, vet.begin()+j+1);
+    sort(v.begin(), v.end(), cmp);
+    
+    for(auto x : v) printf("{%d,%d,%d} ", x.first, x.second.first, x.second.second);
+    printf("\n");
+    unordered_map<int,bool> vst;
+    ll maxsum = 0LL, sum = 0LL;
+    for(int i = 0; i < N ; ++i){
+        sum = 0LL;
+        if(vst.find(i) != vst.end()) continue;
+        //printf("i = %d\n", i);
+        for(int j = i; j < N ; ++j){
+            if((v[i].second.first < v[j].second.first && v[i].second.second < v[j].second.second) || (v[i].second.first == v[j].second.first && v[i].second.second == v[j].second.second)){
+                sum+=v[j].first;
+                vst[j] = true;
             }
-            else{
-                printf("Apagando: %d %d %d\n", vet[i].a , vet[i].b, vet[i].c);
-                vet.erase(vet.begin()+i, vet.begin()+i+1);
-            }
-            if(i > 0) i--;
-            if(j > 0) j--;
+            maxsum = max(maxsum, sum);
         }
+        //printf("\n");
     }
 
-    for (p x : vet) {
-        //printf("%d ", x.c);
-        sum += x.c;
-    }
-    printf("%d\n", sum);
+    printf("%lld\n", maxsum);
 
     return 0;
 }
-// #include <bits/stdc++.h>
-// using namespace std;
-// struct p {
-//   int a, b, c;
-//   p(int a, int b, int c) : a(a), b(b), c(c) {}
-// };
-
-// int main() {
-
-//     int n, a, b, c, sum = 0;
-//     vector<p> vet;
-//     scanf("%d", &n);
-//     for (int i = 0; i < n; ++i) {
-//         scanf("%d%d%d", &a, &b, &c);
-//         vet.push_back({a,b,c});
-//     }
-//     for (int i = 0; i < vet.size(); ++i) {
-//         for (int j = 0; j < vet.size(); ++j) {
-//             if(i == j || (vet[j].a == vet[j].b && vet[i].a == vet[i].b)) continue;
-//             if((vet[i].a >= vet[j].a && vet[i].b >= vet[j].b) || (vet[i].a <= vet[j].a && vet[i].b <= vet[j].b)) continue;
-//             if(vet[i].c > vet[j].c){
-//                 printf("Apagando: %d %d %d\n", vet[j].a , vet[j].b, vet[j].c);
-//                 vet.erase(vet.begin()+j, vet.begin()+j+1);
-//             }
-//             else{
-//                 printf("Apagando: %d %d %d\n", vet[i].a , vet[i].b, vet[i].c);
-//                 vet.erase(vet.begin()+i, vet.begin()+i+1);
-//             }
-//             if(i > 0) i--;
-//             if(j > 0) j--;
-//         }
-//     }
-
-//     for (p x : vet) {
-//         //printf("%d ", x.c);
-//         sum += x.c;
-//     }
-//     printf("%d\n", sum);
-
-//     return 0;
-// }
