@@ -12,3 +12,16 @@ public:
         return mx;
     }
 };
+//Alternative
+class Solution {
+public:
+    int maxProfit(vector<int>& p) {
+        const int sz = p.size(), oo = 0x3f3f3f3f;
+        int minp = oo, maxp = 0;
+        for(int i = 0; i < sz ; ++i){
+            minp = min(minp, p[i]);
+            maxp = max(maxp, p[i]-minp);
+        }
+        return maxp;
+    }
+};

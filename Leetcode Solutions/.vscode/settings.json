@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "array": "cpp",
+        "regex": "cpp",
+        "*.tcc": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "cstdlib": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "valarray": "cpp",
+        "forward_list": "cpp",
+        "initializer_list": "cpp",
+        "system_error": "cpp"
+    }
+}
