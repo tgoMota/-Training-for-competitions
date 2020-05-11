@@ -8,8 +8,6 @@ using namespace std;
 typedef long long ll;
 typedef vector<pair<int,int>> vii;
 typedef pair<int,int> pii;
- 
-
 
 int main(){
     int t;
@@ -18,28 +16,33 @@ int main(){
         int n, k;
         scanf("%d%d", &n, &k);
         vector<int> v(n);
-        map<int,int> cnt;
+       // map<int,int> cnt;
         for(int i = 0; i < n ; ++i) scanf("%d", &v[i]);
         int ans = 0;
-        for(int i = 0, j = n-1 ; i < j ; ++i, --j){
-            cnt[v[i]+v[j]]++;
-        }
-        int S = (*cnt.begin()).first;
-        for(int i = 0, j = n-1 ; i < j ; ++i, --j){
-            if(v[i] + v[j] == S){
-
-            }else if(v[i] + v[j] != S){
-                if(v[i] < 1 || v[i] >= k || v[j] < 1 || v[j] >= k || v[i] > S || v[j] >= S){
-                    if(v[i] < 1 || v[i] >= k || v[i] >= S) ans++;
-                    if(v[j] < 1 || v[j] >= k || v[j] >= S) ans++;
-                    printf("%d e %d\n", v[i], v[j]);
-                }else {
-                    ans++;
+        // for(int i = 0, j = n-1 ; i < j ; ++i, --j){
+        //     cnt[v[i]+v[j]]++;
+        // }
+        int ansmin = oo;
+        //int S = (*cnt.begin()).first;
+        for(int S = 2; S <= 2*k ; ++S){
+            ans = 0;
+            for(int i = 0, j = n-1 ; i < j ; ++i, --j){
+                if(v[i] + v[j] != S){
+                    if(S-v[i] > k || S-v[j] > k){
+                        ans = oo;
+                        break;
+                    } 
+                    if(v[i] < 1 || v[i] >= k || v[j] < 1 || v[j] >= k || v[i] > S || v[j] >= S){
+                        if(v[i] < 1 || v[i] >= k || v[i] >= S) ans++;
+                        if(v[j] < 1 || v[j] >= k || v[j] >= S) ans++;
+                    }else {
+                        ans++;
+                    }
                 }
             }
+            ansmin = min(ansmin, ans);
         }
-        printf("S = %d\n", S);
-        printf("%d\n", ans);
+        printf("%d\n", ansmin);
     }
     return 0;
 }

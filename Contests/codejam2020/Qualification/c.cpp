@@ -50,7 +50,7 @@ int main(){
     int t, n;
     cin >> t;
     for(int ti = 1; ti <= t ; ++ti){
-        vector<pair<pair<int,int>, int>> v;s
+        vector<pair<pair<int,int>, int>> v;
         cin >> n;
         for(int i = 0; i < n ; ++i){
             int a, b;
