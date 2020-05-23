@@ -2,53 +2,43 @@
 //1. Nuclear Reactor
 #include <bits/stdc++.h>
 using namespace std;
- 
 typedef long long ll;
-const int m = 1e5+5;
-ll p[m];
-int n, k;
- 
-void print(ll ans){
-    ll plants = 0LL;
-    int react = 1;
-    printf("%llu", p[0]);
-    for(int i = 1; i < n ; ++i){
-        plants += (p[i]-p[i-1]);
-        if(plants >= ans){
-            plants = 0LL;
-            printf(" %llu", p[i]);
-            react++;
-            if(react >= k) break;
+vector<ll> ans;
+int can(ll mid, ll k, vector<ll>& v){
+    ans.clear();
+    ll sum = 0LL;
+    ans.push_back(v[0]);
+    k--;
+    for(int i = 0; i < v.size()-1 && k ; ++i){
+        sum += v[i+1]-v[i]; //4 5 11 8 10
+        if(sum >= mid){
+            k--;
+            sum = 0LL;
+            ans.push_back(v[i+1]);
         }
     }
-    printf("\n");
-}
- 
-bool can(ll mid){
-    ll plants = 0LL;
-    int react = 1;
-    for(int i = 1; i < n ; ++i){
-        plants += (p[i]-p[i-1]);
-        if(plants >= mid){
-            plants = 0LL;
-            react++;
-        }
-    }
-    return react>=k;
+    return k == 0;
 }
  
 int main(){
+    int n, k;
     cin >> n >> k;
-    for(int i = 0 ; i < n ; ++i) cin >> p[i];
-    sort(p,p+n);
- 
-    ll hi = 1e18, lo = 0LL, mid, ans = 0LL;
-    for(int i = 0; i < 80 ; ++i){
-        mid = (lo+hi) >> 1;
-        if(can(mid)) lo = mid+1, ans = mid;
-        else hi = mid-1;
+    vector<ll> v(n);
+    for(ll& x : v) scanf("%lld", &x);
+    sort(v.begin(), v.end());
+    ll lo = 0LL, hi = v.back(), mid;
+    while(lo < hi){
+        mid = lo + (hi-lo)/2LL;
+        if(can(mid, k, v)) lo = mid+1;
+        else hi = mid;
     }
  
-    print(ans);
+    can(lo-1, k, v);
+    for(int i = 0; i < ans.size() ; ++i){
+        printf("%lld", ans[i]);
+        if(i != (int)ans.size()-1) printf(" ");
+    }
+    printf("\n");
+ 
     return 0;
 }
