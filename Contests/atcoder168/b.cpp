@@ -9,10 +9,17 @@ typedef unsigned long long ull;
 typedef pair<int,int> ii;
  
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
+    fastio();
+    for(int ti = 1; ti <= 1 ; ++ti){
+        int k;
+        cin >> k;
+        string s;
+        cin >> s;
+        const int N = s.size();
+        string ans = s;
+        if(N > k) ans = s.substr(0,k) + "...";
         
+        cout << ans << endl;
     }
     return 0;
 }

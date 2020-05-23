@@ -7,12 +7,20 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> ii;
- 
+
+vector<int> A, B;
+
+bool isBad(int i, int j){
+
+}
+
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    int n;
+    scanf("%d", &n);
+    A.resize(n+1);
+    B.resize(n+1);
+    for(int i = 1; i <= n ; ++i){
+        scanf("%d%d", &A[i], &B[i]);
     }
     return 0;
 }

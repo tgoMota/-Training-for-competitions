@@ -6,23 +6,19 @@ using namespace std;
 const int mod = 1e9+7;
 typedef long long ll;
 typedef unsigned long long ull;
-typedef pair<int,int> pii;
+typedef pair<int,int> ii;
 
 int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-      int n;
-      scanf("%d", &n);
-      vector<int> v(n);
-      set<int> s;
-      for(int& x : v) scanf("%d", &x);
-
-      for(int i = 0; i < n ; ++i){
-          s.insert(((i+v[i])%n + n)%n);
-      }
-
-      printf("%s\n", (int)s.size() == n ? "YES" : "NO");
+        int n;
+        scanf("%d", &n);
+        ll ans = 0LL;
+        for(int i = 1; i <= n/2 ; ++i){
+            ans += 8LL*i*i;
+        }
+        printf("%lld\n", ans);
     }
     return 0;
 }

@@ -1,55 +1,56 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1148
+//URI 1148 Países em Guerra
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<int,int> ii;
 #define oo 0x3f3f3f3f
-vector<ii> adj[502];
-int djikstra(int t, vector<int>& dist, const int N){
-    dist.assign(N+1,oo);
-    dist[t] = 0;
-    priority_queue<ii, vector<ii>, greater<ii> > q;
-    q.push(make_pair(0,t));
-    while(!q.empty()){
-        ii v = q.top();
-        q.pop();
-        int v2 = v.second;
-        for(auto x : adj[v2]){
-            if(dist[x.second] <= dist[v2] + x.first) continue;
-            dist[x.second] = dist[v2] + x.first;
-            q.push(make_pair(dist[x.second], x.first));
-        }
-    }
-}
+typedef long long ll;
+typedef pair<int,int> ii;
+vector<vector<ii>> adj;
 
-bool has(vector<ii>& a, int t){
-    for(ii x : a) {
-        if(x.second == t){
-            x.first = 0;
-            return true;
-        }
+bool findAndChange(vector<ii>& a, int u){
+    for(auto& x : a) if(x.first == u){
+        x.second = 0;
+        return true;
     }
     return false;
 }
-int main(){
 
-    int n, e;
-    while(scanf("%d%d", &n, &e) && n+e){
-        for(int i = 0; i < e ; ++i){
+int main(){
+    int n, m;
+    while(scanf("%d%d", &n, &m) && n+m){
+        adj.assign(n+1, vector<ii>());
+        for(int i = 0; i < m ; ++i){
             int a, b, c;
             scanf("%d%d%d", &a, &b, &c);
-            if(has(adj[b], a)) c = 0;
-            adj[a].push_back(make_pair(c,b));
+            if(findAndChange(adj[b], a)) c = 0;
+            adj[a].push_back({b,c});
         }
-        vector<int> dist;
-        int qu;
-        scanf("%d", &qu);
-        for(int i = 0; i < qu ; ++i){
-            int a, b;
-            scanf("%d%d", &a, &b);
-            djikstra(a,dist,n);
-            printf("dist = %d\n", dist[b]);
-        }
-        for(int i = 1; i <= n ; ++i) adj[i].clear();
-    }
 
+        int q;
+        scanf("%d", &q);
+        vector<int> dist;
+        while(q--){
+            int o, d;
+            scanf("%d%d", &o, &d);
+            set<ii> s;
+            s.insert({0,o});
+            dist.assign(n+1, -1);
+            while(!s.empty()){
+                auto x = *s.begin();
+                s.erase(s.begin());
+                int w = x.first;
+                int u = x.second;
+                if(dist[u] != -1) continue;
+                dist[u] = w;
+                for(auto v : adj[u]){
+                    if(dist[v.first] != -1) continue;
+                    s.insert({w+v.second, v.first});
+                }
+            }
+            if(dist[d] != -1) printf("%d\n", dist[d]);
+            else printf("Nao e possivel entregar a carta\n");
+        }
+        printf("\n");
+    }
     return 0;
 }
