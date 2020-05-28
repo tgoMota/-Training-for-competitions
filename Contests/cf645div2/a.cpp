@@ -7,7 +7,6 @@ using namespace std;
 #define debug2(x,y) cout << "DONT CRY {" << x << "," << y << "}\n"
 const int mod = 1e9+7;
 typedef long long ll;
-typedef long double ld;
 typedef unsigned long long ull;
 typedef pair<int,int> ii;
  
@@ -15,7 +14,12 @@ int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-        
+        int a, b;
+        scanf("%d%d", &a, &b);
+        int r = a*b;
+        int add = r%2 != 0;
+
+        printf("%d\n", r/2+add);
     }
     return 0;
 }

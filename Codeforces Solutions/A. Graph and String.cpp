@@ -1,5 +1,5 @@
 //http://codeforces.com/problemset/problem/623/A
-
+//A. Graph and String
 #include <bits/stdc++.h>
 using namespace std;
 
