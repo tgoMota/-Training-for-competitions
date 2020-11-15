@@ -9,7 +9,7 @@ int pd(int cap, int i){
     if(i == n || cap == 0) return 0;
     int& ans = memo[i][cap];
     if(ans != -1) return ans;
-    return ans = max(pd(cap,i+1), pd(cap-wgt[i], i+1) + price[i])   ;
+    return ans = max(pd(cap,i+1), pd(cap-wgt[i], i+1) + price[i]);
 }
 
 int main(){

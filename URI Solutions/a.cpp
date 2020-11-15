@@ -1,79 +1,75 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1056
-//URI 1056 Fatores e Múltiplos
-// #include <bits/stdc++.h>
-// using namespace std;
-// #define oo 0x3f3f3f3f
-// #define ooLL 0x3f3f3f3f3f3f3f3f
-// #define fastio() ios_base::sync_with_stdio(false); cin.tie(0)
-// #define debug(x) cout << "DONT CRY " << x << endl
-// #define debug2(x,y) cout << "DONT CRY {" << x << "," << y << "}\n"
-// const int mod = 1e9+7;
-// typedef long long ll;
-// typedef long double ld;
-// typedef unsigned long long ull;
-// typedef pair<int,int> ii;
-// vector<int> v;
-// vector<vector<int>> adj;
-// int n, m;
-// set<ii, greater<ii>> s;
-// vector<bool> vst;
-// bool exist[205][205];
-// bool removed[205];
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> ii;
+vector<pair<int,ii>> edges;
 
-// int dfs(int u){
-//     if(removed[u]) return 0;
-//     int ans = 0;
-//     for(int x : adj[u]){
-//         if(!removed[x]) ans++;
-//     }
-//     return ans;
-// }
+vector<int> parent;
+void init(const int N){
+  parent.resize(N+1);
+  for(int i = 1; i <= N ; ++i) parent[i] = i;
+}
+
+int find(int u){
+  return parent[u] == u ? u : find(parent[u]);
+}
+
+void merge(int x, int y){
+  x = find(x), y = find(y);
+  parent[y] = x;
+}
+
+int kruskalMin(const int N){
+  init(N);
+  sort(edges.begin(), edges.end());
+  int mst_cost = 0;
+  for(auto x : edges){
+    int w = x.first;
+    int u = x.second.first;
+    int v = x.second.second;
+
+    if(find(u) == find(v)) continue;
+
+    mst_cost+=w;
+    merge(u,v);
+  }
+
+  return mst_cost;
+}
+
+bool cmp(auto a, auto b){
+  return a.first > b.first;
+}
+
+int kruskalMax(const int N){
+  init(N);
+  sort(edges.begin(), edges.end(), cmp);
+  int mst_cost = 0;
+  for(auto x : edges){
+    int w = x.first;
+    int u = x.second.first;
+    int v = x.second.second;
+
+    if(find(u) == find(v)) continue;
+
+    mst_cost+=w;
+    merge(u,v);
+  }
+
+  return mst_cost;
+}
+
+int main(){
+  int n, m;
+  scanf("%d%d", &n, &m);
+
+  for(int i = 0; i < m ; ++i){
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    edges.push_back({c, {a,b}});
+  }
+
+  
 
 
-// int main(){
-//     int t;
-//     scanf("%d", &t);
-//     for(int ti = 1; ti <= t ; ++ti){
-//         v.clear();
-//         memset(exist, false, sizeof(exist));
-//         memset(removed, false, sizeof(removed));
-//         scanf("%d", &n);
-//         for(int i = 0; i < n ; ++i){
-//             int a;
-//             scanf("%d", &a);
-//             v.push_back(a);
-//         }
-//         scanf("%d", &m);
-//         for(int i = 0; i < m ; ++i){
-//             int a;
-//             scanf("%d", &a);
-//             v.push_back(a);
-//         }
-//         adj.assign(n+m, vector<int>());
-//         for(int i = 0; i < n ; ++i){
-//             for(int j = n; j < n+m ; ++j){
-//                 if((v[j]%v[i]) == 0) {
-//                     adj[i].push_back(j);
-//                     adj[j].push_back(i);
-//                     exist[i][j] = true;
-//                     exist[j][i] = true;
-//                 }
-//             }
-//         }
-
-//         int cnt = 0;
-//         while(1){
-//             s.clear();
-//             for(int i = 0; i < n+m ; ++i){
-//                 s.insert({dfs(i),i});
-//             }
-//             auto x = *s.begin();
-//             if(x.first == 0) break;
-//             removed[x.second] = true;
-//             cnt++;
-//         }
-
-//         printf("Case %d: %d\n", ti, cnt);
-//     }
-//     return 0;
-// }
+  return 0;
+}
