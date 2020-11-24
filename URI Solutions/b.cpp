@@ -1,5 +1,3 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1056
-//URI 1056 Fatores e Múltiplos
 // #include <bits/stdc++.h>
 // using namespace std;
 // #define oo 0x3f3f3f3f
