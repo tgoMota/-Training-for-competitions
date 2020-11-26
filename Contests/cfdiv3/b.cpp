@@ -17,30 +17,22 @@ int main(){
     for(int ti = 1; ti <= t ; ++ti){
         int n;
         scanf("%d", &n);
-        vector<ii> v(n, {0,0});
-        for(int i = 0; i < n ; ++i){
-            scanf("%d", &v[i].first);
-            v[i].second = i+1;
+        vector<ii> cnt(n+1, {0,0});
+        for(int i = 1; i <= n ; ++i){
+            int a;
+            scanf("%d", &a);
+            cnt[a].first++;
+            cnt[a].second = i;
         }
-        sort(v.begin(), v.end());
-        pair<int,int> minx = {-1,-1};
-        for(int i = 0; i < n-1 ; ++i){
-            if(v[i].first == v[i+1].first){
-                for(int j = i+1; j < n ; ++j){
-                    if(v[j].first != v[i].first){
-                        i = j-1;
-                        break;
-                    }
-                }
-            }else{
-                minx = v[i];
+        int minx = -1;
+        for(int i = 1; i <= n ; ++i){
+            if(cnt[i].first == 1){
+                minx = cnt[i].second;
                 break;
-            } 
+            }
         }
-
-        if(minx.first == -1 && n>1 && v[n-1].first != v[n-2].first) minx = v.back();
-        else if(n == 1) minx = v.back();
-        printf("%d\n", minx.second);
+        printf("%d\n", minx);
+            
     }
     return 0;
 }
