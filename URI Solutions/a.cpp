@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1023
-//URI 1023 - Estiagem
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1167
+//URI 1167 - Acampamento de Férias
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -12,32 +12,53 @@ typedef long long ll;
 typedef long double ld;
 typedef unsigned long long ull;
 typedef pair<int,int> ii;
-const double EPS = 1e-9;
+struct p{
+  string name;
+  int num;
+  p(){}
+  p(string _name, int _num){
+    name = _name;
+    num = _num;
+  }
+};
+
+list<p>::iterator getNext(list<p>& a, list<p>::iterator &it, int direction){
+  auto toEnd = a.end();
+  toEnd--;
+  if(direction) return next(it) == a.end() ? a.begin() : next(it);
+  else return it == a.begin() ? toEnd : prev(it);
+}
+
 int main(){
-    int n, ti = 0;
-    while(scanf("%d", &n) && n){
-      if(ti) printf("\n");
-      ll totalP = 0LL, totalC = 0LL;
-      vector<ll> byConsumed(250, 0);
+    fastio();
+    list<p> circle;
+    int n;
+    while(cin >> n && n){
+      circle.clear();
+      string name;
+      int num;
       for(int i = 0; i < n ; ++i){
-        ll a, b;
-        scanf("%lld%lld", &a, &b);
-        totalP += a;
-        totalC += b;
-        byConsumed[b/a]+=a;
+        cin >> name >> num;
+        circle.push_back(p(name, num));
       }
-      printf("Cidade# %d:\n", ++ti);
-      int cnt = 0;
-      for(int i = 0; i < 250 ; ++i){
-        if(byConsumed[i] > 0) {
-          if(cnt++) printf(" ");
-          printf("%lld-%d", byConsumed[i], i);
+
+      auto it = circle.begin();
+      int val = (*it).num;
+      int direction = val%2; //0 -> clockwise
+      while(circle.size() > 1){
+        const int sz = circle.size();
+        val%=sz;
+        while(val-->0){
+          it = getNext(circle,it, direction);
         }
+        val = (*it).num;
+        direction = val%2;
+        auto it2 = it;
+        it = getNext(circle, it, direction);
+        val--;
+        circle.erase(it2);
       }
-      double intPart;
-      int fracPart = (int)(modf(totalC/(double)totalP, &intPart)*100);
-      if(fracPart>=10) printf("\nConsumo medio: %d.%d m3.\n",(int)intPart, fracPart);
-      else printf("\nConsumo medio: %d.0%d m3.\n",(int)intPart, fracPart);
+      cout << "Vencedor(a): " << (*circle.begin()).name << '\n';
     }
     return 0;
 }
