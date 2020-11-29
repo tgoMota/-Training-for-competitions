@@ -9,7 +9,7 @@ typedef struct SegTree{
   int goals;
   void init(){
     t.assign(4*MAXN, 0);
-    v.assign(MAXN/2, 0);
+    v.assign(MAXN, 0);
     goals = 0;
   }
 
