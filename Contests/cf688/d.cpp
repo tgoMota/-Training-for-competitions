@@ -23,28 +23,12 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
-vector<vector<int>> v;
-vector<vector<int>> sum;
-
-
+ 
 int main(){
-    int n;
-    while(scanf("%d", &n) && n){
-      v.assign(n+1, vector<int>(n+1, 0));
-      sum.assign(n+1, vector<int>(n+1, 0));
-      vector<vector<vector<int>>> dp(n+1, vector<int>(n+1, vector<int>(2,0)));
-      for(int i = 1; i <= n ; ++i){
-        for(int j = 1; j <= i ; ++j){
-          scanf("%d", &v[i][j]);
-          dp[i][j] = dp[i-1][]
-        }
-      }
+    int t;
+    scanf("%d", &t);
+    for(int ti = 1; ti <= t ; ++ti){
+        
     }
     return 0;
 }
-
-// 4
-// 3
-// -5 3
-// -8 2 -8
-// 3 9 -2 7
