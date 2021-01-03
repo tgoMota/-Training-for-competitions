@@ -10,7 +10,7 @@ int solve(int pos, int a, int b, int c, const int n){
     if(a > b+sum[pos] || a > c+sum[pos] || b > c+sum[pos]) return -oo;
     int& ans = memo[a][b];
     if(ans != -1) return ans;
-    return max(solve(pos+1, a+v[pos], b, c, n), max(solve(pos+1, a, b+v[pos], c, n), solve(pos+1, a, b, c+v[pos], n)));
+    return ans = max(solve(pos+1, a+v[pos], b, c, n), max(solve(pos+1, a, b+v[pos], c, n), solve(pos+1, a, b, c+v[pos], n)));
 }
 
 int main(){
