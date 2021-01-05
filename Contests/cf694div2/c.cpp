@@ -28,7 +28,19 @@ int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-        
+        int n, m;
+        scanf("%d%d", &n, &m);
+        vector<int> v1(n), v2(m);
+        for(int& x : v1) scanf("%d", &x);
+        for(int& x : v2) scanf("%d", &x);
+        sort(v1.begin(), v1.end(), greater<int>());
+        ll ans = 0LL;
+        for(int i = 0; i < n ; ++i){
+          if(i < m) ans += min(v2[i], v2[v1[i]-1]);
+          else ans += v2[v1[i]-1];
+        }
+
+        printf("%lld\n", ans);
     }
     return 0;
 }

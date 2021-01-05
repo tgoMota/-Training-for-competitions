@@ -24,11 +24,25 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
+vector<ll> v;
 int main(){
     int t;
     scanf("%d", &t);
     for(int ti = 1; ti <= t ; ++ti){
-        
+      ll n, x;
+      scanf("%lld%lld", &n, &x);
+      ll sum1=0LL, sum2=0LL,sum=0LL;
+      for(int i=0;i<n;i++){
+          ll a;
+          scanf("%lld", &a);
+          sum1+=ceil(a/(double)x);
+          sum+=a;
+      }
+      sum2+=ceil(sum/(double)x);
+      ll maxx=max(sum1, sum2);
+      ll minx=min(sum1,sum2);
+      printf("%lld %lld\n", minx, maxx);
+
     }
     return 0;
 }
