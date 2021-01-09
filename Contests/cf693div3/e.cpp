@@ -30,14 +30,18 @@ int find(int u){
   return p[u] == u ? u : find(p[u]);
 }
 
+vector<int> newpos;
+
 void merge(int u, int v){
   u = find(u);
   v = find(v);
   if(u == v) return;
-  auto xu = vec[u].first;
-  auto xv = vec[v].first;
+  auto xu = vec[newpos[u]].first;
+  auto xv = vec[newpos[v]].first;
   if(xu.first < xv.first && xu.second < xv.second) p[v] = u;
   else if(xu.first < xv.second && xu.second < xv.first) p[v] = u;
+  else if(xv.first < xu.first && xv.second < xu.second) p[u] = v;
+  else if(xv.first < xu.second && xv.second < xu.first) p[u] = v;
 }
 
 int main(){
@@ -54,17 +58,18 @@ int main(){
         }
         p.resize(n);
         for(int i = 0; i < n ; ++i) p[i] = i;
+        
+        sort(vec.begin(), vec.end(), [](pair<pair<ll,ll>,int>& a, pair<pair<ll,ll>,int>& b){
+          pair<ll,ll> xu = a.first, xv = b.first;
+          return xu.second < xv.second;
+        });
 
-        // sort(vec.begin(), vec.end(), [](pair<pair<ll,ll>,int>& a, pair<pair<ll,ll>,int>& b){
-        //   pair<ll,ll> xu = a.first, xv = b.first;
-        //   if(xu.first < xv.first && xu.second < xv.second) return true;
-        //   if(xu.first < xv.second && xu.second < xv.first) return true;
-        //   return false;
-        // });
-
+        newpos.resize(n);
         for(int i = 0; i < n ; ++i){
-          for(int j = 0; j < n ; ++j){
-            if(i == j) continue;
+          newpos[vec[i].second] = i;
+        }
+        for(int i = 0; i < n ; ++i){
+          for(int j = i+1; j < n ; ++j){
             merge(vec[i].second,vec[j].second);
           }
         }
