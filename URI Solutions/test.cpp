@@ -25,10 +25,6 @@ typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
-        //testing
-    }
+    
     return 0;
 }
