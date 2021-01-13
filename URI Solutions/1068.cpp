@@ -1,25 +1,23 @@
 #include <bits/stdc++.h>
 using namespace std;
-string line;
-stack<char> pil;
-bool yes;
+
 int main(){
-    while(getline(cin,line)){
-        while(!pil.empty()) pil.pop();
-        yes = true;
-        for(int i = 0; i < line.size() ; ++i){
-            if(line[i] == '(') pil.push(line[i]);
-            if(line[i] == ')'){
-                if(!pil.empty() && pil.top() == '('){
-                    pil.pop();
-                }else{
-                    yes = false;
+    string s;
+    while(cin >> s && !cin.eof()){
+        stack<char> st;
+        bool ok = true;
+        for(char c: s){
+            if(c == '(') st.push(c);
+            else if(c == ')'){
+                if(st.empty()){
+                    ok = false;
                     break;
                 }
+                st.pop();
             }
         }
-        if(pil.empty() && yes) cout << "correct\n";
-        else cout << "incorrect\n";
-    }
+        if(!st.empty()) ok = false;
+        cout << (ok ? "correct\n" : "incorrect\n");
+     }
     return 0;
 }
