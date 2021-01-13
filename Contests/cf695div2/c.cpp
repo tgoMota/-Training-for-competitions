@@ -24,11 +24,48 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
+int idx[] = {0,0,0};
+int n[3];
+vector<vector<int>> v;
+pair<int,int> pk(){
+  vector<int> temp = {0,1,2};
+  sort(temp.begin(), temp.end(), [&](int a, int b){
+    return (n[a]-idx[a]) > (n[b]-idx[b]);
+  });
+  return make_pair(temp[0], temp[1]);
+}
+
+bool ok(){
+  int cnt = (n[0]-idx[0] > 0) + (n[1]-idx[1] > 0) + (n[2]-idx[2] > 0);
+  return cnt > 1;
+}
+
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    for(int i = 0; i < 3 ; ++i) scanf("%d", &n[i]);
+    for(int i = 0; i < 3 ; ++i){
+      vector<int> temp;
+      for(int j = 0; j < n[i] ; ++j){
+        int a;
+        scanf("%d", &a);
+        temp.push_back(a);
+      }
+      v.push_back(temp);
     }
+
+
+    while(ok()){
+      pair<int,int> p = pk();
+      int a = p.first, b = p.second;
+      int idxa = idx[a], idxb = idx[b];
+      trace(a, b, idxa, idxb, v[a][idxa], v[b][idxb]);
+      v[a][idxa] = v[a][idxa] - v[b][idxb];
+      idx[b]++;
+    }
+
+    if(n[0]-idx[0] > 0) printf("%d\n", v[0].back());
+    else if(n[1]-idx[1] > 0) printf("%d\n", v[1].back());
+    else printf("%d\n", v[2].back());
+
+
     return 0;
 }
