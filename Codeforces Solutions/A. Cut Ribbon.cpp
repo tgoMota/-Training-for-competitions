@@ -17,15 +17,6 @@ int pd(int t){
     return ans;
 }
 
-//Other way to solve...
-// int pd(int t){
-//     if(t == 0) return 0;
-//     if(t < 0) return -oo;
-//     int& ans = memo[t];
-//     if(ans != -1) return ans;
-//     return ans = 1 + max(max(pd(t-comp[1]), pd(t-comp[2])), pd(t-comp[3]));
-// }
-
 int main(){
 
     cin >> comp[0] >> comp[1] >> comp[2] >> comp[3];
