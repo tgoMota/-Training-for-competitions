@@ -2,7 +2,7 @@
 //UVA 10511 - Councilling
 #include <bits/stdc++.h>
 using namespace std;
-//CHECK THE CONSTRAINTS, PLEASE
+//CHECK THE LIMITS, PLEASE
 map<pair<int,string>, int> idString;
 map<int,string> takeById;
 vector<unordered_map<int,int>> adj;
