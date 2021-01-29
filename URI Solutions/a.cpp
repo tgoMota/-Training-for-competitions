@@ -1,100 +1,95 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2700
-//URI 2700 - Angariando Fundos
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1447
+//URI 1447 - Back to the Future
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
 #define ooLL 0x3f3f3f3f3f3f3f3f
-#define fastio() ios_base::sync_with_stdio(false); cin.tie(0)
-#define LOCAL
-#ifdef LOCAL
-#define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
-#else
-#define trace(...) 42
-#endif
-template <typename Arg1>
-void __f(const char* name, Arg1&& arg1){
-  cerr << name << ": " << arg1 << endl;
-}
-template <typename Arg1, typename... Args>
-void __f(const char* names, Arg1&& arg1, Args&&... args){
-  const char* comma = strchr(names + 1, ',');
-  cerr.write(names, comma - names) << ": " << arg1 << " |";
-  __f(comma + 1, args...);
-}
-const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
-int n;
-vector<pair<ll,ii>> v;
+int n, m, s, t, d, k;
+vector<unordered_map<int, pair<ll,int>>> adj;
+vector<ll> dist;
+vector<int> parent;
 
-struct Seg{
-  vector<ll> t;
-  Seg(const int n){
-    t.assign(4*n, 0);
+int aug(int v, int mined){
+  if(parent[v] == -1) return mined;
+  mined = aug(parent[v], min(mined, adj[parent[v]][v].second));
+  adj[parent[v]][v].second -= mined;
+  adj[v][parent[v]].second += mined;
+  adj[v][parent[v]].first = -adj[parent[v]][v].first;
+  return mined;
+}
+
+bool belmanFord(){
+  parent.assign(n+1, -1);
+  dist.assign(n+1, oo);
+  queue<int> q;
+  vector<bool> inq(n+1, false);
+  q.push(s);
+  dist[s] = 0;
+  while(!q.empty()){
+    int v = q.front();
+    inq[v] = false;
+    q.pop();
+    for(auto e : adj[v]){
+      int u = e.first, w = e.second.first, cap = e.second.second;
+      if(cap > 0 && dist[v]+w < dist[u]){
+        dist[u] = dist[v]+w;
+        parent[u] = v;
+        if(!inq[u]){
+          inq[u] = true;
+          q.push(u);
+        }
+      }
+    }
+  }
+  return dist[t] != oo;
+}
+
+pair<int,ll> maxflow(){
+  int mxflow = 0;
+  ll cost = 0LL;
+  while(belmanFord()){
+    int flow = aug(t, oo);
+    mxflow += flow;
+    cost += dist[t] * flow;
+    if(mxflow >= d){
+      int rest = mxflow-d;
+      cost -= rest*dist[t];
+      break;
+    }
   }
 
-  void update(int i, int l, int r, int p, ll x){
-        if(l > r) return;
-        if(l == r){
-            t[i] = max(t[i], x);
-            return;
-        }
-        int m = l + (r-l)/2;
-        if(p <= m) update(2*i, l, m, p, x);
-        else update(2*i+1, m+1, r, p, x);
-        t[i] = max(t[2*i], t[2*i+1]);
-    }
-
-    ll query(int i, int l, int r, int ql, int qr){
-        if(ql <= l && qr >= r) return t[i];
-        if(ql > r || qr < l) return 0;
-        int m = l + (r-l)/2;
-        return max(query(2*i, l, m, ql, qr), query(2*i+1, m+1, r, ql, qr));
-    }
-
-};
+  return {mxflow, cost};
+}
 
 int main(){
-    scanf("%d", &n);
-    v.resize(n);
-    map<ii,ll> compressed;
-    set<int> onlyf;
-    for(pair<ll,ii> &x : v) {
-      scanf("%d%d%lld", &x.second.first, &x.second.second, &x.first);
-      auto it = compressed.find(x.second);
-      onlyf.insert(x.second.second);
-      if(it == compressed.end()) compressed[x.second] = x.first;
-      else it->second += x.first;
+    int ti = 0;
+    while(scanf("%d%d", &n, &m) != EOF){
+      adj.assign(n+1, unordered_map<int,pair<ll,int>>());
+      s = 1, t = n;
+      for(int i = 0; i < m ; ++i){
+        int a, b;
+        ll c;
+        scanf("%d%d%lld", &a, &b, &c);
+        adj[a][b] = {c, 0};
+        adj[b][a] = {c, 0};
+      }
+      scanf("%d%d", &d, &k);
+      for(int i = 1; i <= n ; ++i){
+        for(auto &e : adj[i]){
+          e.second.second = k;
+        }
+      }
+      printf("Instancia %d\n", ++ti);
+      pair<ll,int> flowAndCost = maxflow();
+      int flow = flowAndCost.first;
+      ll cost = flowAndCost.second;
+      if(flow < d) printf("impossivel\n");
+      else printf("%lld\n", cost);
+      printf("\n");
     }
-    unordered_map<int,int> countf;
-    int count = 0;
-    for(int x : onlyf){
-      countf[x] = count++;
-    }
-    vector<pair<ll,ii>> new_v;
-    int idx = 0;
-    for(auto x : compressed) {
-      pair<ii, ll> y = x;
-      y.first.second = countf[y.first.second];
-      new_v.push_back({y.second, y.first});
-    }
-    const int N = (int)new_v.size();
-    sort(new_v.begin(), new_v.end(), [](pair<ll,ii>& a, pair<ll,ii>& b){
-      if(a.second.first != b.second.first) return a.second.first < b.second.first;
-      return a.second.second > b.second.second;
-    });
-
-    Seg seg(N);
-    for(auto x : new_v){
-      ll before = seg.query(1, 0, N-1, 0, x.second.second-1);
-     // trace(x.first);
-      seg.update(1, 0, N-1, x.second.second, before+x.first);
-    }
-
-    ll ans = seg.query(1, 0, N-1, 0, N-1);
-
-    printf("%lld\n", ans);
     return 0;
 }
