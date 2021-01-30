@@ -24,62 +24,96 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
-int N, M, P;
-vector<string> grid;
-vector<map<ii,int>> memo;
-map<ii,int> counterP;
-bool vst[105][105];
+int n;
+vector<vector<int>> adj;
+vector<bool> vst;
+vector<int> match;
 
-int dx[] = {1,1,-1,-1,2,2,-2,-2}, dy[] = {2,-2,2,-2,1,-1,1,-1};
-int solve(int i, int j, int mask){
- // trace(i,j,mask);
-  if(vst[i][j]) return oo;
-  if(mask == 0) return 0;
-  if(i >= N  || i < 0 || j >= M || j < 0) return oo;
-  map<ii,int>& pos = memo[mask];
-  if(pos.find({i,j}) != pos.end()) return pos[{i,j}];
-  int ans = oo;
-  for(int dir = 0; dir < 4 ; ++dir){
-    int new_x = dx[dir]+i;
-    int new_y = dy[dir]+j;
-    if(new_x < 0 || new_x >= N || new_y < 0 || new_y >= M) continue;
-    if(grid[new_x][new_y] == '#') continue;
-    int counter = -1;
-    int new_mask = mask;
-    if(counterP.find({new_x, new_y}) != counterP.end()){
-      counter = counterP[{new_x, new_y}];
-      if(new_mask & (1<<counter)) {
-        new_mask-= (1<<counter);
-        //memset(vst, false, sizeof(vst));
-      }
+int aug(int v){
+  if(vst[v]) return 0;
+  vst[v] = true;
+  for(int u : adj[v]){
+    if(match[u] == -1 || aug(match[u])){
+      match[u] = v;
+      return 1;
     }
-    vst[i][j] = true;
-    ans = min(ans, 1+solve(new_x, new_y, new_mask));
-    vst[i][j] = false;
   }
-  pos[{i,j}] = ans;
-  return ans;
+  return 0;
 }
 
 int main(){
-    while(scanf("%d%d%d", &N, &M, &P) && N+M+P){
-      grid.clear();
-      counterP.clear();
-      ii posIni;
-      int countP = 0;
-      for(int i = 0; i < N ; ++i){
-        string line;
-        cin >> line;
-        grid.push_back(line);
-        for(int j = 0; j < N ; ++j){
-          if(line[j] == 'C') posIni = {i,j};
-          if(line[j] == 'P') counterP[{i,j}] = countP++;
-        }
+    while(scanf("%d", &n) != EOF){
+      adj.assign(n+1, vector<int>());
+      for(int i = 1; i <= n ; ++i){
+        int a;
+        scanf("%d", &a);
+        adj[a].push_back(i);
+        adj[i].push_back(a);
       }
-      int mask = (1<<P);
-      memo.assign(mask, map<ii,int>());
-      memset(vst, false, sizeof(vst));
-      printf("%d\n", solve(posIni.first, posIni.second, mask-1));
+
+      int mcbm = 0;
+      match.assign(n+1, -1);
+      for(int i = 1; i <= n ; ++i){
+        vst.assign(n+1, false);
+        mcbm += aug(i);
+      }
+
+      if(n%2 || mcbm < n/2) printf("IMPOSSIBLE\n");
+      else{
+        set<ii> duos;
+        vector<bool> used(n+1, false);
+        for(int i = 1; i <= n ; ++i){
+          int a = min(i, match[i]);
+          int b = max(i, match[i]);
+          if(a == -1 || b == -1) continue;
+          if(!used[a] && !used[b]) {
+            duos.insert({a,b});
+            used[a] = used[b] = true;
+          }
+        }
+        vector<int> ans(n+1, -1);
+        vector<int> happens(n+1, 0);
+        vector<ii> toOrder;
+        for(ii x : duos){
+          int u = x.first, v = x.second;
+          happens[u]++;
+          happens[v]++;
+          toOrder.push_back(x);
+        }
+
+        // set<ii> byHappens;
+        // for(int i = 1; i <= n ; ++i){
+        //   byHappens.insert({happens[i], i});
+        // }
+        sort(toOrder.begin(), toOrder.end(), [&](ii& a, ii& b){
+          int mina = min(happens[a.first], happens[a.second]);
+          int minb = min(happens[b.first], happens[b.second]);
+          if(mina == minb) return min(a.first, a.second) < min(b.first, b.second);
+          return mina < minb;
+        });
+        for(ii x : toOrder) {
+          //printf("{%d,%d} ", x.first, x.second);
+          if(ans[x.first] != -1  || ans[x.second] != -1) continue;
+          ans[x.first] =  x.second;
+          ans[x.second] = x.first;
+        }
+        bool ok = true;
+        for(int i = 1; i <= n ; ++i){
+          if(ans[i] == -1){
+            ok = false;
+            break;
+          }
+        }
+        if(!ok){
+          printf("IMPOSSIBLE\n");
+          continue;
+        }
+        for(int i = 1; i <= n ; ++i){
+          printf("%d", ans[i]);
+          if(i != n) printf(" ");
+        }
+        printf("\n");
+      }
     }
     return 0;
 }

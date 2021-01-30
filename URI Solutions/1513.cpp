@@ -1,6 +1,5 @@
 //https://www.urionlinejudge.com.br/judge/pt/problems/view/1513
 //URI 1513 - Cavalo
-//Runtime Error
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -10,41 +9,76 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int,int> ii;
+
 int n, m, k, dx[]={2,2,-2,-2,1,1,-1,-1}, dy[] = {1,-1,1,-1,2,-2,2,-2};
+int posi, posj, base;
+int idxp = 0;
+vector<vector<int>> new_dist, dist;
+map<ii, int> counterP;
 vector<string> grid;
-//int memo[101][101][1<<15];
-map<pair<int,ii>, int> mp;
-int solve(int i, int j, int mask, int posi, int posj){
-    if(i < 0 || j < 0 || i >= n || j >= m || grid[i][j] == '#') return oo;
-    if(mask == 0 && i == posi && j == posj) return 0;
-    if(mp.find({i,{j,mask}}) != mp.end()) return mp[{i,{j,mask}}];
-    int ans = oo;
-    for(int idx = 0; idx < 8 ; ++idx){
-        int x = dx[idx] + i;
-        int y = dy[idx] + j;
-        if(x < 0 || y < 0 || x >= n || y >= m || grid[x][y] == '#') continue;
-        int digit = grid[x][y] - '0';
-        int newMask = isdigit(grid[x][y]) && (mask & (1 << digit)) ? mask ^ (1 << digit) : mask;
-        ans = min(ans,1+solve(x, y, newMask, posi, posj));
+
+void bfs(int si, int sj){
+  dist.assign(n, vector<int>(m, -1));
+  queue<ii> q;
+  q.push({si, sj});
+  dist[si][sj] = 0;
+  while(!q.empty()){
+    ii x = q.front();
+    q.pop();
+    for(int i = 0; i < 8 ; ++i){
+      int new_x = x.first + dx[i];
+      int new_y = x.second + dy[i];
+      if(new_x < 0 || new_x >= n || new_y < 0 || new_y >= m || grid[new_x][new_y] == '#') continue;
+      if(dist[new_x][new_y] != -1) continue;
+      dist[new_x][new_y] = dist[x.first][x.second] + 1;
+      q.push({new_x, new_y});
     }
-    return mp[{i,{j,mask}}] = ans;
+  }
+  int id_s = counterP[{si,sj}];
+  for(auto it : counterP){
+    int id_p = it.second;
+    int x = it.first.first, y = it.first.second;
+    new_dist[id_s][id_p] = new_dist[id_p][id_s] = dist[x][y];
+  }
 }
 
+vector<vector<int>> memo;
+
+int solve(int v, int mask){
+  if(mask == 0) return new_dist[v][base];
+  int& ans = memo[v][mask];
+  if(ans != -1) return ans;
+  ans = oo;
+  for(int i = 0; i < base ; ++i){
+    if(i == v) continue;
+    if(!(mask & (1<<i))) continue;
+    ans = min(ans, new_dist[v][i] + solve(i, mask-(1<<i)));
+  }
+  return ans;
+}
 
 int main(){
     fastio();
     while(cin >> n >> m >> k && n + m + k){
+        idxp = 0;
+        counterP.clear();
         grid.resize(n);
-        int posi, posj;
         for(int i = 0, cnt = 0; i < n ; ++i){
             cin >> grid[i];
             for(int j = 0; j < m ; ++j) {
                 if(grid[i][j] == 'C') posi = i, posj = j;
-                if(grid[i][j] == 'P') grid[i][j] = '0' + cnt++;
+                if(grid[i][j] == 'P') counterP[{i,j}] = idxp++;
             }
         }
-
-         cout << solve(posi,posj,(1<<k)-1, posi, posj) << '\n';
+        base = idxp++;
+        counterP[{posi, posj}] = base;
+        
+        new_dist.assign(idxp, vector<int>(idxp, 0));
+        for(auto x : counterP){
+          bfs(x.first.first, x.first.second);
+        }
+        memo.assign(idxp,vector<int>(1<<k, -1));
+        cout << solve(base, (1<<k)-1) << '\n';
     }
 
     return 0;

@@ -1,95 +1,85 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1447
-//URI 1447 - Back to the Future
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1513
+//URI 1513 - Cavalo
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
 #define ooLL 0x3f3f3f3f3f3f3f3f
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(NULL)
+const int mod = 1e9+7;
 typedef long long ll;
-typedef long double ld;
+typedef unsigned long long ull;
 typedef pair<int,int> ii;
-//CHECK THE LIMITS, PLEASE
-int n, m, s, t, d, k;
-vector<unordered_map<int, pair<ll,int>>> adj;
-vector<ll> dist;
-vector<int> parent;
 
-int aug(int v, int mined){
-  if(parent[v] == -1) return mined;
-  mined = aug(parent[v], min(mined, adj[parent[v]][v].second));
-  adj[parent[v]][v].second -= mined;
-  adj[v][parent[v]].second += mined;
-  adj[v][parent[v]].first = -adj[parent[v]][v].first;
-  return mined;
-}
+int n, m, k, dx[]={2,2,-2,-2,1,1,-1,-1}, dy[] = {1,-1,1,-1,2,-2,2,-2};
+int posi, posj, base;
+int idxp = 0;
+vector<vector<int>> new_dist, dist;
+map<ii, int> counterP;
+vector<string> grid;
 
-bool belmanFord(){
-  parent.assign(n+1, -1);
-  dist.assign(n+1, oo);
-  queue<int> q;
-  vector<bool> inq(n+1, false);
-  q.push(s);
-  dist[s] = 0;
+void bfs(int si, int sj){
+  dist.assign(n, vector<int>(m, -1));
+  queue<ii> q;
+  q.push({si, sj});
+  dist[si][sj] = 0;
   while(!q.empty()){
-    int v = q.front();
-    inq[v] = false;
+    ii x = q.front();
     q.pop();
-    for(auto e : adj[v]){
-      int u = e.first, w = e.second.first, cap = e.second.second;
-      if(cap > 0 && dist[v]+w < dist[u]){
-        dist[u] = dist[v]+w;
-        parent[u] = v;
-        if(!inq[u]){
-          inq[u] = true;
-          q.push(u);
-        }
-      }
+    for(int i = 0; i < 8 ; ++i){
+      int new_x = x.first + dx[i];
+      int new_y = x.second + dy[i];
+      if(new_x < 0 || new_x >= n || new_y < 0 || new_y >= m || grid[new_x][new_y] == '#') continue;
+      if(dist[new_x][new_y] != -1) continue;
+      dist[new_x][new_y] = dist[x.first][x.second] + 1;
+      q.push({new_x, new_y});
     }
   }
-  return dist[t] != oo;
+  int id_s = counterP[{si,sj}];
+  for(auto it : counterP){
+    int id_p = it.second;
+    int x = it.first.first, y = it.first.second;
+    new_dist[id_s][id_p] = new_dist[id_p][id_s] = dist[x][y];
+  }
 }
 
-pair<int,ll> maxflow(){
-  int mxflow = 0;
-  ll cost = 0LL;
-  while(belmanFord()){
-    int flow = aug(t, oo);
-    mxflow += flow;
-    cost += dist[t] * flow;
-    if(mxflow >= d){
-      int rest = mxflow-d;
-      cost -= rest*dist[t];
-      break;
-    }
-  }
+vector<vector<int>> memo;
 
-  return {mxflow, cost};
+int solve(int v, int mask){
+  if(mask == 0) return new_dist[v][base];
+  int& ans = memo[v][mask];
+  if(ans != -1) return ans;
+  ans = oo;
+  for(int i = 0; i < base ; ++i){
+    if(i == v) continue;
+    if(!(mask & (1<<i))) continue;
+    ans = min(ans, new_dist[v][i] + solve(i, mask-(1<<i)));
+  }
+  return ans;
 }
 
 int main(){
-    int ti = 0;
-    while(scanf("%d%d", &n, &m) != EOF){
-      adj.assign(n+1, unordered_map<int,pair<ll,int>>());
-      s = 1, t = n;
-      for(int i = 0; i < m ; ++i){
-        int a, b;
-        ll c;
-        scanf("%d%d%lld", &a, &b, &c);
-        adj[a][b] = {c, 0};
-        adj[b][a] = {c, 0};
-      }
-      scanf("%d%d", &d, &k);
-      for(int i = 1; i <= n ; ++i){
-        for(auto &e : adj[i]){
-          e.second.second = k;
+    fastio();
+    while(cin >> n >> m >> k && n + m + k){
+        idxp = 0;
+        counterP.clear();
+        grid.resize(n);
+        for(int i = 0, cnt = 0; i < n ; ++i){
+            cin >> grid[i];
+            for(int j = 0; j < m ; ++j) {
+                if(grid[i][j] == 'C') posi = i, posj = j;
+                if(grid[i][j] == 'P') counterP[{i,j}] = idxp++;
+            }
         }
-      }
-      printf("Instancia %d\n", ++ti);
-      pair<ll,int> flowAndCost = maxflow();
-      int flow = flowAndCost.first;
-      ll cost = flowAndCost.second;
-      if(flow < d) printf("impossivel\n");
-      else printf("%lld\n", cost);
-      printf("\n");
+        base = idxp++;
+        counterP[{posi, posj}] = base;
+        
+        new_dist.assign(idxp, vector<int>(idxp, 0));
+        for(auto x : counterP){
+          bfs(x.first.first, x.first.second);
+        }
+        memo.assign(idxp,vector<int>(1<<k, -1));
+        cout << solve(base, (1<<k)-1) << '\n';
     }
+
     return 0;
 }
