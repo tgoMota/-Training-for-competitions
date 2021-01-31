@@ -1,85 +1,88 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1513
-//URI 1513 - Cavalo
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
 #define ooLL 0x3f3f3f3f3f3f3f3f
-#define fastio() ios_base::sync_with_stdio(false); cin.tie(NULL)
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(0)
+#define LOCAL
+#ifdef LOCAL
+#define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define trace(...) 42
+#endif
+template <typename Arg1>
+void __f(const char* name, Arg1&& arg1){
+  cerr << name << ": " << arg1 << endl;
+}
+template <typename Arg1, typename... Args>
+void __f(const char* names, Arg1&& arg1, Args&&... args){
+  const char* comma = strchr(names + 1, ',');
+  cerr.write(names, comma - names) << ": " << arg1 << " |";
+  __f(comma + 1, args...);
+}
 const int mod = 1e9+7;
 typedef long long ll;
-typedef unsigned long long ull;
+typedef long double ld;
 typedef pair<int,int> ii;
-
-int n, m, k, dx[]={2,2,-2,-2,1,1,-1,-1}, dy[] = {1,-1,1,-1,2,-2,2,-2};
-int posi, posj, base;
-int idxp = 0;
-vector<vector<int>> new_dist, dist;
-map<ii, int> counterP;
-vector<string> grid;
-
-void bfs(int si, int sj){
-  dist.assign(n, vector<int>(m, -1));
-  queue<ii> q;
-  q.push({si, sj});
-  dist[si][sj] = 0;
-  while(!q.empty()){
-    ii x = q.front();
-    q.pop();
-    for(int i = 0; i < 8 ; ++i){
-      int new_x = x.first + dx[i];
-      int new_y = x.second + dy[i];
-      if(new_x < 0 || new_x >= n || new_y < 0 || new_y >= m || grid[new_x][new_y] == '#') continue;
-      if(dist[new_x][new_y] != -1) continue;
-      dist[new_x][new_y] = dist[x.first][x.second] + 1;
-      q.push({new_x, new_y});
+//CHECK THE LIMITS, PLEASE
+int n, s, t;
+vector<unordered_map<int,int>> adj;
+vector<int> match, color;
+vector<bool> vst;
+int colorBase, other;
+int aug(int v){
+  if(vst[v] || color[v] == other) return 0;
+  vst[v] = true;
+  for(auto it : adj[v]){
+    int u = it.first;
+    //assert(color[u] == 1);
+    if(match[u] == -1 || aug(match[u])){
+      match[u] = v;
+      return 1;
     }
   }
-  int id_s = counterP[{si,sj}];
-  for(auto it : counterP){
-    int id_p = it.second;
-    int x = it.first.first, y = it.first.second;
-    new_dist[id_s][id_p] = new_dist[id_p][id_s] = dist[x][y];
-  }
-}
-
-vector<vector<int>> memo;
-
-int solve(int v, int mask){
-  if(mask == 0) return new_dist[v][base];
-  int& ans = memo[v][mask];
-  if(ans != -1) return ans;
-  ans = oo;
-  for(int i = 0; i < base ; ++i){
-    if(i == v) continue;
-    if(!(mask & (1<<i))) continue;
-    ans = min(ans, new_dist[v][i] + solve(i, mask-(1<<i)));
-  }
-  return ans;
+  return 0;
 }
 
 int main(){
-    fastio();
-    while(cin >> n >> m >> k && n + m + k){
-        idxp = 0;
-        counterP.clear();
-        grid.resize(n);
-        for(int i = 0, cnt = 0; i < n ; ++i){
-            cin >> grid[i];
-            for(int j = 0; j < m ; ++j) {
-                if(grid[i][j] == 'C') posi = i, posj = j;
-                if(grid[i][j] == 'P') counterP[{i,j}] = idxp++;
+    while(scanf("%d", &n) != EOF){
+      adj.assign(n+3, unordered_map<int,int>());
+      for(int i = 1; i <= n ; ++i){
+        int a;
+        scanf("%d", &a);
+        adj[a][i] = 1;
+        adj[i][a] = 1;
+      }
+      color.assign(n+1, -1);
+      bool isBipartite = true;
+      vector<int> rnk(2,0);
+      for(int i = 1; i <= n && isBipartite ; ++i){
+        if(color[i] != -1) continue;
+        queue<int> q;
+        q.push(i);
+        color[i] = 0;
+        rnk[0] = 1;
+        while(!q.empty()){
+          int v = q.front();
+          q.pop();
+          for(auto it : adj[v]){
+            int x = it.first;
+            if(x == v || color[x] == color[v]){
+              isBipartite = false;
+              break;
             }
+            if(color[x] == -1){
+              color[x] = 1 - color[v];
+              rnk[color[x]]++;
+              q.push(x);
+            }
+          }
+          if(!isBipartite) break;
         }
-        base = idxp++;
-        counterP[{posi, posj}] = base;
-        
-        new_dist.assign(idxp, vector<int>(idxp, 0));
-        for(auto x : counterP){
-          bfs(x.first.first, x.first.second);
-        }
-        memo.assign(idxp,vector<int>(1<<k, -1));
-        cout << solve(base, (1<<k)-1) << '\n';
+      }
+      if(!isBipartite || (n&1)){
+        printf("IMPOSSIBLE\n");
+        continue;
+      }
     }
-
     return 0;
 }

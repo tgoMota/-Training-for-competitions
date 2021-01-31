@@ -2,30 +2,31 @@
 //URI 1107 - Escultura à Laser
 #include <bits/stdc++.h>
 using namespace std;
-int grid[10002][10002];
+
 int main(){
-    int a, c, k;
-    while(scanf("%d%d", &a, &c) && a+c){
-        for(int i = 1; i <= a ; ++i)
-            for(int j = 1; j <= c ; ++j) grid[i][j] = 1;
-        for(int i = 1; i <= c ; ++i){
-            scanf("%d", &k);
-            for(int j = a; j > a- k ; --j) grid[j][i] = 0;
-        }
-        int cont = 0, div = 1;
-        for(int i = a; i >= 1 ; --i){
-            for(int j = 1; j <= c ; ++j){
-                if(!div && !grid[i][j]) div = 1;
-                if(div && grid[i][j]){
-                    cont++;
-                    div = 0;
-                }
-            }
-            div = 1;
-        }
-
-        printf("%d\n", cont);
-    }
-
+    int a, c;
+	while(scanf("%d%d", &a, &c) && a+c){
+		vector<int> v(c);
+		for(int& x : v) scanf("%d", &x);
+		int ans = 0;
+		for(int h = a; h >= 0 ; --h){
+			bool cut = false;
+			int maxh = 0, qtd = 0;
+			for(int l = 0; l < c ; ++l){
+				if(!cut && v[l] < h) qtd++;
+				if(v[l] < h) {
+					maxh = max(maxh, v[l]);
+					cut = true;
+				}else if(v[l] >= h){
+					cut = false;
+				}
+			}
+			if(qtd){
+				ans += qtd*(h-maxh);
+			}else break;
+			h = maxh+1;
+		}
+		printf("%d\n", ans);
+	}
     return 0;
 }
