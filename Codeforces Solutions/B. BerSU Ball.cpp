@@ -1,3 +1,5 @@
+//https://codeforces.com/problemset/problem/489/B
+//B. BerSU Ball
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,11 +26,27 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+vector<int> a, b;
+int n, m;
+const int NAX = 105;
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    scanf("%d", &n);
+    a.resize(n);
+    for(int& x : a) scanf("%d", &x);
+    scanf("%d", &m);
+    b.resize(m);
+    for(int& x : b) scanf("%d", &x);
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+    int i = 0, j = 0, ans = 0;
+    while(i < n && j < m){
+      int dist = abs(a[i]-b[j]);
+      if(dist <= 1){
+        ans++;
+        i++, j++;
+      }else if(a[i] < b[j]) i++;
+      else if(b[j] < a[i]) j++;
     }
+    printf("%d\n", ans);
     return 0;
 }

@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/327/problem/A
+//A. Flipping Game
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,11 +26,25 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+int score(int val){
+  return val == 1 ? -1 : 1;
+}
 int main(){
-    int t;
-    scanf("%d", &t);
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    int n;
+    scanf("%d", &n);
+    vector<int> v(n);
+    int sum = 0;
+    for(int& x : v) {
+      scanf("%d", &x);
+      sum += x==1;
     }
+    int maxsum = sum, inisum = sum;
+    for(int i = 0; i < n ; ++i){
+      sum += score(v[i]);
+      sum = max(sum, inisum);
+      maxsum = max(maxsum, sum);
+    }
+
+    printf("%d\n", maxsum == inisum ? maxsum-1 : maxsum);
     return 0;
 }
