@@ -24,34 +24,96 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
-const int NAX = 1000000;
-bool test(int x, int y, int z){
-  return x*x + y*y == z*z;
-}
-int gcd(int a, int b, int c){
-  return __gcd(a, __gcd(b,c));
-}
-int main(){
-    int n;
-    while(scanf("%d", &n) != EOF){
-      set<int> used;
-      int triples = 0;
-      for(int x = 1; x <= n; ++x){
-        for(int y = x+1; y <= n ; ++y){
-          if(__gcd(x,y) != 1) continue;
-          for(int z = y+1; z <= n ; ++z){
-            if(gcd(x,y,z) == 1 && test(x,y,z)){
-              triples++;
-              used.insert(x);
-              used.insert(y);
-              used.insert(z);
-            }
-          }
-        }
-      }
+struct point{
+  int x, y;
+  point(){};
+  point(int _x, int _y){
+    x = _x;
+    y = _y;
+  }
+};
 
-      int allused = (int)used.size();
-      printf("%d %d\n", triples, n-allused);
+struct segment{
+  point start, end;
+  segment(){};
+  segment(point _start, point _end){
+    start = _start;
+    end = _end;
+  }
+
+  void print(){
+    printf("start = {%d,%d}, end = {%d,%d}\n", start.x,start.y, end.x, end.y);
+  }
+};
+
+struct rectangle{
+  point bottom_right, bottom_left, top_right, top_left;
+  segment left, right, top, bottom;
+  rectangle(){};
+  rectangle(point _top_left, point _bottom_right){
+    bottom_right = _bottom_right;
+    top_left = _top_left;
+    int y_bottom_left = bottom_right.y;
+    int x_bottom_left = top_left.x;
+    bottom_left = point(x_bottom_left, y_bottom_left);
+    int y_top_right = _top_left.y;
+    int x_top_right = bottom_right.x;
+    top_right = point(x_top_right, y_top_right);
+
+    left = segment(top_left, bottom_left);
+    bottom = segment(bottom_left, bottom_right);
+    right = segment(top_right, bottom_right);
+    top = segment(top_left, top_right);
+  }
+
+  void print(){
+    printf("REC:\n");
+    printf("left: ");
+    left.print();
+    printf("right: ");
+    right.print();
+    printf("top: ");
+    top.print();
+    printf("bottom: ");
+    bottom.print();
+  }
+};
+
+int orientation(point& a, point& b, point& c){
+  int o = (b.y-a.y)*(c.x-b.x) - (b.x-a.x)*(c.y-b.y);
+  if(o == 0) return 0;
+  return  o < 0 ? -1 : 1;
+}
+// int orientation(point p1, point p2, point p3) 
+// { 
+//     // See 10th slides from following link for derivation 
+//     // of the formula 
+//     int val = (p2.y - p1.y) * (p3.x - p2.x) - 
+//               (p2.x - p1.x) * (p3.y - p2.y); 
+  
+//     if (val == 0) return 0;  // colinear 
+  
+//     return (val > 0)? 1: 2; // clock or counterclock wise 
+// } 
+bool intersect(segment a, segment b){
+  point p1 = a.start, p2 = a.end, p3 = b.start, p4 = b.end;
+  return (orientation(p1, p2, p3) != orientation(p1,p2,p4)) && (orientation(p3,p4,p1) != (orientation(p3,p4,p2)));
+}
+
+
+
+int main(){
+    int t;
+    scanf("%d", &t);
+    for(int ti = 1; ti <= t ; ++ti){
+        int start_x, start_y, end_x, end_y;
+        scanf("%d%d%d%d", &start_x, &start_y, &end_x, &end_y);
+        int top_left_x, top_left_y, bottom_right_x, bottom_right_y;
+        scanf("%d%d%d%d", &top_left_x, &top_left_y, &bottom_right_x, &bottom_right_y);
+        segment l = segment(point(start_x, start_y), point(end_x, end_y));
+        rectangle r = rectangle(point(top_left_x, top_left_y), point(bottom_right_x, bottom_right_y));
+        bool has_intersection = intersect(r.left, l) || intersect(r.right, l) || intersect(r.top, l) || intersect(r.bottom, l);
+        printf("%s\n", has_intersection ? "T" : "F");
     }
     return 0;
 }
