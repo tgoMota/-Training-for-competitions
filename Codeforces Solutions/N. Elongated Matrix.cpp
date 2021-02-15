@@ -53,32 +53,30 @@ int main(){
     }
   }
 
-  int fullmask = (1<<n)-1;
-  vector<vector<vector<int>>> dp(fullmask+1, vector<vector<int>>(n, vector<int>(n, 0)));
-  for(int i = 0; i < n ; ++i) dp[1<<i][i][i] = oo;
-
-  for(int mask = 1; mask < fullmask ; ++mask){
-    for(int row = 0; row < n ; ++row){
-      for(int prev = 0; prev < n ; ++prev){
-        if(((mask & (1<<row)) && (mask & (1<<prev)))){
+  int ans = 0, fullmask = (1<<n)-1;
+  for(int row = 0; row < n ; ++row){
+    vector<vector<int>> dp(fullmask+1, vector<int>(n, 0));
+    dp[1<<row][row] = oo;
+    for(int mask = 1; mask < fullmask ; ++mask){
+      for(int prev_row = 0; prev_row < n ; ++prev_row){
+        if(((1<<row) & mask) && ((1<<prev_row) & mask)){
           for(int new_row = 0; new_row < n ; ++new_row){
-            if(mask & (1<<new_row)) continue;
-            int new_state = mask | (1 << new_row);
-            int new_cost = min(dp[mask][row][prev], dist[prev][new_row]);
-            dp[new_state][row][new_row] = max(dp[new_state][row][new_row], new_cost);
+            if((1<<new_row) & mask) continue;
+            const int new_state = mask | (1<<new_row);
+            const int new_cost = min(dist[prev_row][new_row], dp[mask][prev_row]);
+            dp[new_state][new_row] = max(dp[new_state][new_row], new_cost);
           }
         }
       }
     }
-  }
-
-  int ans = 0;
-  for(int i = 0; i < n ; ++i){
-    for(int j = 0; j < n ; ++j){
-      ans = max(ans, min(dp[fullmask][i][j], dist2[i][j]));
+    for(int i = 0; i < n ; ++i){
+      ans = max(ans, min(dp[fullmask][i], dist2[row][i]));
     }
   }
 
   cout << ans << '\n';
+ 
+  
   return 0;
 }
+
