@@ -1,3 +1,5 @@
+//B. Eugeny and Play List
+//https://codeforces.com/problemset/problem/302/B
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -23,15 +25,31 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
-//CHECK THE LIMITS, PLEASE
+//CHECK THE CONSTRAINTS, PLEASE
+vector<ii> v;
 int main(){
-    ll a = 0LL, b = 1LL, c;
-    for(int i = 0; i < (int)1e9 ; ++i){
-      c = a + b;
-      a = b;
-      b = c;
-      if(i % 1000 == 0) a = b = c = 1;
+    int n, m;
+    cin >> n >> m;
+    v.resize(n);
+    for(ii& x : v) cin >> x.first >> x.second;
+    vector<ll> pref(n+1, 0);
+    pref[0] = v[0].first*v[0].second;
+    for(int i = 1; i < n ; ++i) pref[i] += pref[i-1] + v[i].first*1LL*v[i].second;
+    auto getSum = [&](int r){
+      return pref[r];
+    };
+    while(m--){
+      int q;
+      cin >> q;
+      int lo = 0, hi = n;
+      while(lo < hi){
+        int mid = (lo + hi)/2;
+        ll x = getSum(mid);
+        if(x >= q) hi = mid;
+        else lo = mid+1;
+      }
+      if(lo == n) lo--;
+      cout << lo+1 << '\n';
     }
-    cout << c << '\n';
     return 0;
 }

@@ -50,7 +50,7 @@ int main(){
     int idx = 1;
     bool ok = false;
     int ans = 0;
-    for(int i = 0; i < n*m+10 ; ++i){
+    for(int i = 0; i < n*m ; ++i){
       ans++;
       for(int j = 1; j <= interrup[idx][0] ; ++j){
         int light = interrup[idx][j];

@@ -1,3 +1,5 @@
+//https://codeforces.com/problemset/problem/776/C
+//C. Molly's Chemicals
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -23,15 +25,27 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
-//CHECK THE LIMITS, PLEASE
+//CHECK THE CONSTRAINTS, PLEASE
+vector<ll> v;
 int main(){
-    ll a = 0LL, b = 1LL, c;
-    for(int i = 0; i < (int)1e9 ; ++i){
-      c = a + b;
-      a = b;
-      b = c;
-      if(i % 1000 == 0) a = b = c = 1;
+    ll max_x = 0LL;
+    int n, k;
+    cin >> n >> k;
+    v.resize(n);
+    for(ll& x : v) cin >> x;
+    ll ans = 0LL, x = 1LL;
+    while(x <= (ll)1e14){
+      map<ll,ll> mp;
+      ll sum = 0LL;
+      for(int i = 0; i < n ; ++i) {
+        sum += v[i];
+        if(sum == x) ans++;
+        ans += mp[sum-x];
+        mp[sum]++;
+      }
+      x*=k;
+      if(x == 1) break;
     }
-    cout << c << '\n';
+    cout << ans << '\n';
     return 0;
 }

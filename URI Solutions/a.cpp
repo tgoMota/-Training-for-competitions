@@ -1,10 +1,8 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2884
-//URI 2884 - Interruptores
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
 #define ooLL 0x3f3f3f3f3f3f3f3f
-#define fastio() ios_base::sync_with_stdio(false); cin.tie(0)
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 #define LOCAL
 #ifdef LOCAL
 #define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
@@ -26,54 +24,38 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
-int n, m, l;
-vector<int> all;
-vector<vector<int>> interrup;
+vector<bool> circle;
+vector<vector<ll>> memo;
+bool valid(int a, int b, int c){
+  return (circle[a] + circle[b] + circle[c]) <= 1;
+}
+ll solve(int l, int r){
+  if(r - l < 2) return 1;
+  if(r - l == 2) return valid(l,l+1,r);
+  ll& ans = memo[l][r];
+  if(ans != -1LL) return ans;
+  ans = 0;
+  for(int i = l+1; i <= r ; i+=3){
+    for(int j = i+1; j <= r ; j+=3){
+      if(valid(l, i, j)) ans += solve(l+1, i-1)*solve(i+1, j-1)*solve(j+1,r);
+    }
+  }
+  return ans;
+}
+
 int main(){
-    scanf("%d%d", &n,&m);
-    interrup.assign(n+1, vector<int>());
-    all.assign(m+1, 0);
-    scanf("%d", &l);
-    for(int i = 0; i < l ; ++i){
-      int a;
-      scanf("%d", &a);
-      all[a] = 1;
+    fastio();
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int n;
+        cin >> n;
+        string line;
+        cin >> line;
+        circle.assign(n, false);
+        for(int i = 0; i < n; ++i) circle[i] = (line[i] == 'R');
+        memo.assign(n+1, vector<ll>(n+1, -1LL));
+        cout << "Case " << ti << ": " << solve(0,n-1) << '\n';
     }
-
-    for(int i = 1; i <= n ; ++i){
-      int a;
-      scanf("%d", &a);
-      interrup[i].resize(a+1);
-      interrup[i][0] = a;
-      for(int j = 1; j <= a ; ++j) scanf("%d",&interrup[i][j]);
-    }
-    int idx = 1;
-    bool ok = false;
-    int ans = 0;
-    for(int i = 0; i < n*m+10 ; ++i){
-      ans++;
-      for(int j = 1; j <= interrup[idx][0] ; ++j){
-        int light = interrup[idx][j];
-        all[light] ^= 1;
-      }
-
-      bool check = true;
-      for(int j = 1; j <= m ; ++j){
-        if(all[j]){
-          check = false;
-          break;
-        }
-      }
-      if(check){
-        ok = true;
-        break;
-      }
-      idx++;
-      if(idx > n) idx = 1;
-    }
-
-    if(ok) printf("%d\n", ans);
-    else printf("-1\n");
-
     return 0;
 }
