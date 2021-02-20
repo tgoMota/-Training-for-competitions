@@ -1,49 +1,81 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1509
-//URI 1509 - Contando Ambiguidades
 #include <bits/stdc++.h>
 using namespace std;
+#define oo 0x3f3f3f3f
+#define ooLL 0x3f3f3f3f3f3f3f3f
 #define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
+#define LOCAL
+#ifdef LOCAL
+#define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define trace(...) 42
+#endif
+template <typename Arg1>
+void __f(const char* name, Arg1&& arg1){
+  cerr << name << ": " << arg1 << endl;
+}
+template <typename Arg1, typename... Args>
+void __f(const char* names, Arg1&& arg1, Args&&... args){
+  const char* comma = strchr(names + 1, ',');
+  cerr.write(names, comma - names) << ": " << arg1 << " |";
+  __f(comma + 1, args...);
+}
 const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
-set<string> words;
-vector<ll> memo;
-int n;
-
-ll dfs(int idx, string& s){
-  if(idx == (int)s.size()) return 1LL;
-  ll& ans = memo[idx];
-  if(ans != -1) return ans;
-  const int N = s.size()-idx;
-  ans = 0LL;
-  for(int i = 0; i < N ; ++i){
-    string sub = s.substr(idx, i+1);
-    if(words.count(sub) == 0) continue;
-    ans = (ans + dfs(idx+i+1, s))%mod;
-  }
-  return ans;
-}
-
+int A, B, M, L, K;
+vector<vector<ii>> adj;
 int main(){
-    fastio();
-    while(cin >> n){
-      words.clear();
-      for(int i = 0; i < n ; ++i){
-        string s;
-        cin >> s;
-        words.insert(s);
-      }
-      int q;
-      cin >> q;
-      while(q--){
-        string s;
-        cin >> s;
-        memo.assign((int)s.size()+1, -1LL);
-        ll ans = dfs(0, s) % mod;
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        cin >> A >> B >> M >> L >> K;
+        const int N = A+B;
+        adj.assign(N+1, vector<ii>());
+        vector<vector<vector<int>>> dp(N+1, vector<vector<int>>(N+1, vector<int>(K+1, oo)));
+        for(int i = 0; i < M ; ++i){
+          int a, b, c;
+          cin >> a >> b >> c;
+          adj[a].push_back({b,c});
+          adj[b].push_back({a,c});
+          dp[a][b][0] = c;
+          dp[b][a][0] = c;
+          dp[a][b][1] = b <= A ? c-min(L,c) : oo;
+          dp[b][a][1] = a <= A ? c-min(L,c) : oo;
+        }
+        for(int k = 1; k <= N ; ++k){
+          for(int i = 1; i <= N ; ++i){
+            for(int j = 1; j <= N ; ++j){
+              for(int fastTravel = 0; fastTravel <= K ; ++fastTravel){
+                for(int used = 0; used + fastTravel <= K ; ++used){
+                  int tot = fastTravel + used;
+                  dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][tot] + dp[k][j][tot]);
+                  dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][used] + dp[k][j][fastTravel]);
+                }
+              }
+            }
+          }
+        }
+        // for(int fastTravel = 0; fastTravel <= K ; ++fastTravel){
+        //   for(int used = 0; used + fastTravel <= K ; ++used){
+        //     for(int k = 1; k <= N ; ++k){
+        //       for(int i = 1; i <= N ; ++i){
+        //         for(int j = 1; j <= N ; ++j){
+        //           int tot = fastTravel + used;
+        //           dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][fastTravel] + dp[k][j][used]);
+        //           dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][used] + dp[k][j][fastTravel]);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+        int ans = oo;
+        for(int i = 0; i <= K ; ++i) {
+          ans = min(ans, dp[N][1][i]);
+          trace(i,N, dp[N][1][i]);
+        }
         cout << ans << '\n';
-      }
     }
     return 0;
 }
