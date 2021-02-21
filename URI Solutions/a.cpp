@@ -26,56 +26,76 @@ typedef pair<int,int> ii;
 //CHECK THE LIMITS, PLEASE
 int A, B, M, L, K;
 vector<vector<ii>> adj;
+
+struct edge{
+  int dist, remainK, howManyCanRun, curVertex, wasRunning, parent;
+  edge(){}
+  edge(int _dist, int _remainK, int _howManyCanRun, int _curVertex, int _wasRunning, int _parent){
+    dist = _dist;
+    remainK = _remainK;
+    howManyCanRun = _howManyCanRun;
+    curVertex = _curVertex;
+    wasRunning = _wasRunning;
+    parent = _parent;
+  }
+
+  bool operator < (const edge& a) const {
+     if(dist == a.dist) return remainK > a.remainK;
+     return dist < a.dist;
+  }
+
+};
+
+int dji(){
+  const int N = A+B;
+  int dist[N+1][K+1][2];
+  memset(dist, -1, sizeof(dist));
+  multiset<edge> mp;
+  mp.insert(edge(0, K, 0, N, 0, -1));
+  while(!mp.empty()){
+    edge e = *mp.begin();
+    mp.erase(mp.begin());
+    int d = e.dist;
+    int r = e.remainK;
+    int howManyCanRun = e.howManyCanRun;
+    int v = e.curVertex;
+    int wasRunning = e.wasRunning;
+    int parent = e.parent;
+    if(dist[v][r][wasRunning] != -1) continue;
+    dist[v][r][wasRunning] = d;
+    if(v == 1) return d;
+    for(auto x : adj[v]){
+      if(x.first == parent) continue;
+      if(v <= A && wasRunning && howManyCanRun >= x.second) {
+        mp.insert(edge(d, r, howManyCanRun-x.second, x.first, 1, v));
+      }
+      else if(r > 0 && L >= x.second) {
+        mp.insert(edge(d, r-1, L-x.second, x.first,1, v));
+      }
+      mp.insert(edge(d+x.second, r,0, x.first, 0, v));
+    }
+  }
+  return -1;
+}
+
 int main(){
+    fastio();
     int t;
     cin >> t;
     for(int ti = 1; ti <= t ; ++ti){
         cin >> A >> B >> M >> L >> K;
         const int N = A+B;
         adj.assign(N+1, vector<ii>());
-        vector<vector<vector<int>>> dp(N+1, vector<vector<int>>(N+1, vector<int>(K+1, oo)));
+        int dp[N+1][N+1][K+1];
+        memset(dp, 0x3f, sizeof(dp));
         for(int i = 0; i < M ; ++i){
           int a, b, c;
           cin >> a >> b >> c;
           adj[a].push_back({b,c});
           adj[b].push_back({a,c});
-          dp[a][b][0] = c;
-          dp[b][a][0] = c;
-          dp[a][b][1] = b <= A ? c-min(L,c) : oo;
-          dp[b][a][1] = a <= A ? c-min(L,c) : oo;
         }
-        for(int k = 1; k <= N ; ++k){
-          for(int i = 1; i <= N ; ++i){
-            for(int j = 1; j <= N ; ++j){
-              for(int fastTravel = 0; fastTravel <= K ; ++fastTravel){
-                for(int used = 0; used + fastTravel <= K ; ++used){
-                  int tot = fastTravel + used;
-                  dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][tot] + dp[k][j][tot]);
-                  dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][used] + dp[k][j][fastTravel]);
-                }
-              }
-            }
-          }
-        }
-        // for(int fastTravel = 0; fastTravel <= K ; ++fastTravel){
-        //   for(int used = 0; used + fastTravel <= K ; ++used){
-        //     for(int k = 1; k <= N ; ++k){
-        //       for(int i = 1; i <= N ; ++i){
-        //         for(int j = 1; j <= N ; ++j){
-        //           int tot = fastTravel + used;
-        //           dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][fastTravel] + dp[k][j][used]);
-        //           dp[i][j][tot] = min(dp[i][j][tot], dp[i][k][used] + dp[k][j][fastTravel]);
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        int ans = oo;
-        for(int i = 0; i <= K ; ++i) {
-          ans = min(ans, dp[N][1][i]);
-          trace(i,N, dp[N][1][i]);
-        }
-        cout << ans << '\n';
+        
+        cout << dji() << '\n';
     }
     return 0;
 }
