@@ -1,5 +1,3 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/3082
-//URI 3082 - Matador De Onça Mutante
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -75,7 +73,6 @@ struct CentroidDec{
     dist_sub.push_back(lv[v]);
     for(int x : tree[v]){
       if(x != p && !isCentroid[x]){
-        lv[x] = lv[v] + 1;
         dfs2(x,v);
         size[v] += size[x];
       }
@@ -109,20 +106,20 @@ struct CentroidDec{
     lv[cent_root] = 0;
     dfs1(cent_root, -1);
     sort(dist_cent.begin(), dist_cent.end());
-    int d = upper_bound(dist_cent.begin(), dist_cent.end(), K) -  dist_cent.begin();
+    int d = upper_bound(dist_cent.begin(), dist_cent.end(), K) -  dist_cent.begin()-1;
     ans[cent_root] += d;
     for(int x : tree[cent_root]){
       if(!isCentroid[x]){
         sub_tree.clear();
         dist_sub.clear();
-        lv[x] = 1;
-        dfs2(x, cent_root);
+        dfs2(x,v);
         sort(dist_sub.begin(), dist_sub.end());
 
         for(int node : sub_tree){
           int add = upper_bound(dist_cent.begin(), dist_cent.end(), K-lv[node])-dist_cent.begin();
-          int repeated = upper_bound(dist_sub.begin(), dist_sub.end(), K-lv[node])-dist_sub.begin();
-          ans[node] += add - repeated;
+          int minus = upper_bound(dist_sub.begin(), dist_sub.end(), K-lv[node])-dist_sub.begin();
+          trace(d, add, minus, cent_root);
+          ans[node] += add - minus;
         }
       }
     }
@@ -143,7 +140,6 @@ int main(){
     }
     ans.assign(N+1, 0);
     cd.decompose(1);
-    for(int i = 1; i <= N ; ++i) cout << ans[i] << '\n';
+    for(int i = 1; i <= N ; ++i) cout << ans[i]+1 << '\n';
     return 0;
 }
-

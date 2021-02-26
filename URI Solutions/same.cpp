@@ -1,5 +1,3 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/3082
-//URI 3082 - Matador De Onça Mutante
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -30,7 +28,7 @@ int N, K;
 vector<int> ans;
 struct CentroidDec{
   int N;
-  vector<int> lv, size, sub_tree, dist_cent, dist_sub;
+  vector<int> lv, size, sub_tree, dist_cent, dist_sub, parent;
   vector<bool> isCentroid;
   vector<vector<int>> tree;
   CentroidDec(){}
@@ -40,6 +38,7 @@ struct CentroidDec{
     isCentroid.assign(n+1, false);
     tree.assign(n+1, vector<int>());
     lv.assign(n+1, 0);
+    parent.assign(n+1, 0);
   }
 
   void add_edge(int u, int v){
@@ -75,32 +74,30 @@ struct CentroidDec{
     dist_sub.push_back(lv[v]);
     for(int x : tree[v]){
       if(x != p && !isCentroid[x]){
-        lv[x] = lv[v] + 1;
         dfs2(x,v);
         size[v] += size[x];
       }
     }
   }
 
-  int getCentroid(int v, int p, const int n){
-    bool is_centroid = true;
-    int heaviest_child = 0;
+  int dfs_aux(int v, int p){
+    size[v] = 1;
+    parent[v] = 0;
     for(int x : tree[v]){
       if(x != p && !isCentroid[x]){
-        if(2*size[x] > n) is_centroid = false;
-        if(heaviest_child == 0 || size[heaviest_child] < size[x]) heaviest_child = x;
+        size[v] += dfs_aux(x, v);
+        if(!parent[v] || size[parent[v]] < size[x]) parent[v] = x;
       }
     }
-
-    if(is_centroid && 2*size[v] >= n) return v;
-    return getCentroid(heaviest_child, v, n);
+    return size[v];
   }
 
   int getCentroid(int v){
-    dfs(v, -1);
-    int centroid = getCentroid(v, -1, size[v]);
-    isCentroid[centroid] = true;
-    return centroid;
+    dfs_aux(v, -1);
+    int n = size[v];
+    while(size[parent[v]]*2 > n) v = parent[v];
+    isCentroid[v] = true;
+    return v;
   }
 
   void decompose(int v){
@@ -109,20 +106,20 @@ struct CentroidDec{
     lv[cent_root] = 0;
     dfs1(cent_root, -1);
     sort(dist_cent.begin(), dist_cent.end());
-    int d = upper_bound(dist_cent.begin(), dist_cent.end(), K) -  dist_cent.begin();
+    int d = upper_bound(dist_cent.begin(), dist_cent.end(), K) -  dist_cent.begin()-1;
     ans[cent_root] += d;
     for(int x : tree[cent_root]){
       if(!isCentroid[x]){
         sub_tree.clear();
         dist_sub.clear();
-        lv[x] = 1;
-        dfs2(x, cent_root);
+        dfs2(x,v);
         sort(dist_sub.begin(), dist_sub.end());
 
         for(int node : sub_tree){
           int add = upper_bound(dist_cent.begin(), dist_cent.end(), K-lv[node])-dist_cent.begin();
-          int repeated = upper_bound(dist_sub.begin(), dist_sub.end(), K-lv[node])-dist_sub.begin();
-          ans[node] += add - repeated;
+          int minus = upper_bound(dist_sub.begin(), dist_sub.end(), K-lv[node])-dist_sub.begin();
+          //trace(d, add, minus, cent_root);
+          ans[node] += add - minus;
         }
       }
     }
@@ -143,7 +140,6 @@ int main(){
     }
     ans.assign(N+1, 0);
     cd.decompose(1);
-    for(int i = 1; i <= N ; ++i) cout << ans[i] << '\n';
+    for(int i = 1; i <= N ; ++i) cout << ans[i]+1 << '\n';
     return 0;
 }
-
