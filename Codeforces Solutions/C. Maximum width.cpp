@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1492/problem/C
+//C. Maximum width
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,18 +26,32 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+int N, M;
+string a, b;
+map<char,vector<int>> mp;
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        int n;
-        cin >> n;
-        vector<int> v(n), freq(10, 0);
-        for(int& x : v) {
-          cin >> x;
-        }
-
+    cin >> N >> M;
+    cin >> a;
+    cin >> b;
+    vector<int> l(M), r(M);
+    int i = 0, j = 0;
+    while(j < M){
+      while(a[i] != b[j]) i++;
+      l[j] = i;
+      j++, i++;
     }
+
+    i = N-1, j = M-1;
+    while(j >= 0){
+      while(a[i] != b[j]) i--;
+      r[j] = i;
+      j--, i--;
+    }
+    int ans = 0;
+    for(int i = 1; i < M ; ++i){
+      ans = max(ans, r[i]-l[i-1]);
+    }
+    cout << ans << '\n';
     return 0;
 }
