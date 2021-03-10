@@ -22,10 +22,10 @@ int main(){
             dp[i][j] += dp[i-1][j] + grid[i][j];
 
         for(int j = n-1; j >= 1 ; --j){
-          ll add = max(0LL, dp[j][j+1]);
+          ll best = 0LL;
           for(int i = j; i <= n ; ++i){
-            add = max(add, dp[i+1][j+1]);
-            dp[i][j] += add;
+            best = max(best, dp[i+1][j+1]);
+            dp[i][j] += best;
           }
         }
 
