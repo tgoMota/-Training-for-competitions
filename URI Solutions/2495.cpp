@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/1486/problem/C1
-//C1. Guessing the Greatest (hard version)
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2495
+//URI 2495 - Onde Está Minha Caneta?
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,34 +26,22 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-int query(int l, int r){
-  cout << "? " << l << " " << r << endl;
-  int ans;
-  cin >> ans;
-  return ans;
-}
- 
 int main(){
+    fastio();
     int n;
-    cin >> n;
-    int s_mx = query(1,n), ans;
-    if(s_mx != 1 && query(1,s_mx) == s_mx){
-      int lo = 1, hi = s_mx;
+    while(cin >> n){
+      vector<int> v(n-1);
+      for(int& x : v) cin >> x;
+      sort(v.begin(), v.end());
+      int lo = 0, hi = n-1;
       while(lo < hi){
         int mid = (lo + hi) >> 1;
-        if(query(mid, s_mx) != s_mx) hi = mid;
+        if(v[mid] > mid+1) hi = mid;
         else lo = mid+1;
       }
-      ans = lo - (lo > 1);
-    }else{ //1 2 3
-      int lo = s_mx+1, hi = n;
-      while(lo < hi){
-        int mid = (lo + hi) >> 1;
-        if(query(s_mx, mid) != s_mx) lo = mid+1;
-        else hi = mid;
-      }
-      ans = lo;
+
+      cout << lo+1 << '\n';
     }
-    cout << "! " << ans << endl;
     return 0;
 }
+
