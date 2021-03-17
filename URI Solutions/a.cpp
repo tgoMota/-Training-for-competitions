@@ -1,85 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long int ll;
-typedef pair<int,int> ii;
+#define oo 0x3f3f3f3f
+#define ooLL 0x3f3f3f3f3f3f3f3f
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
+#define LOCAL
+#ifdef LOCAL
+#define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define trace(...) 42
+#endif
+template <typename Arg1>
+void __f(const char* name, Arg1&& arg1){
+  cerr << name << ": " << arg1 << endl;
+}
+template <typename Arg1, typename... Args>
+void __f(const char* names, Arg1&& arg1, Args&&... args){
+  const char* comma = strchr(names + 1, ',');
+  cerr.write(names, comma - names) << ": " << arg1 << " |";
+  __f(comma + 1, args...);
+}
+const int mod = 1e9+7;
+typedef long long ll;
 typedef long double ld;
-#define MAXM 51
-#define MAXN 2609
-#define INF 1000000007
-#define EPS 1e-9
-#define FOR(i, N) for (int i = 0; i < N; ++i)
-#define FORN(i, j, N) for (int i = j; i < N; ++i)
-#define PMOD(a, m) ((a) % (m) + (m)) % (m)
-
-char t[MAXM][MAXM];
-int val[MAXM][MAXM];
-
-vector<int> adjU[MAXN];
-int pairU[MAXN], pairV[MAXN];
-bool vis[MAXN];
-int m, n;
-
-bool dfs(int u)
-{
-    vis[u] = true;
-    if (u == 0) return true;
-    int v;
-    for (int i=0; i!=(int)adjU[u].size(); ++i) {
-        v = adjU[u][i];
-        if (!vis[pairV[v]] && dfs(pairV[v])) {
-            pairV[v] = u; pairU[u] = v;
-            return true;
-        }
-    }
-    return false;
-}
-
-int hungarian()
-{
-    FOR(i, m + 1) pairU[i] = pairV[i] = 0;
-    int result = 0;
-    for (int u = 1; u <= m; u++) {
-        FOR(i, m + 1) vis[i] = 0;
-        if (pairU[u]==0 && dfs(u))
-            result++;
-    }
-    return result;
-}
-
-int movx[4] = {0, 0, 1, -1};
-int movy[4] = {1, -1, 0, 0};
-int R, C;
-
-int dfs(int i, int j, int p){
-	val[i][j] = (p % 2) ? ++m : ++n;
-
-	FOR(k, 4){
-		int x = movx[k] + i, y = movy[k] + j;
-
-		if (x >= 0 && x < R && y >= 0 && y < C && t[x][y] == '.'){
-			if (!val[x][y]) dfs(x, y, p + 1);
-			if (p % 2) adjU[val[i][j]].push_back(val[x][y]);
-		}
-	}
-}
-
+typedef pair<int,int> ii;
+//CHECK THE CONSTRAINTS, PLEASE
 int main(){
-	while (scanf("%d%d", &R, &C) != EOF){
-		FOR(i, R) {
-			scanf("%s", &t[i]);
-			FOR(j, C) val[i][j] = 0;
-		}
-		int win = 1;
-		FOR(i, R) {FOR(j, C){
-			if (!val[i][j] && t[i][j] == '.'){
-				m = 0, n = 0;
-				dfs(i, j, 1);
-				if (m != n || hungarian() != m) win = 0;
-				FOR(i, m + 1) adjU[i].clear();
-				if (!win) break;				
-			}
+    //fastio();
+    int n, m;
+    cin >> n >> n;
+    vector<ii> v(n);
+    for(int i = 0; i < n ; ++i){
+      cin >> v[i].first;
+      v[i].second = i;
+    }
+    sort(v.begin(), v.end(), [&](ii& a, ii& b){
+      return a.first < b.first;
+    });
 
-		} if (!win) break;}
-		printf("%d\n", win + 1);
-	}
+    for(int i = 0; i < m ; ++i){
+      int k, x;
+      cin >> k >> x;
+      int lo = 0, hi = n;
+      while(lo < hi){
+        int mid = (lo + hi) >> 1;
+        if(v[mid].first >= x) hi = mid;
+        else lo = mid+1;
+      }
+      if(lo == n || v[lo].first != x || lo + k-1 >= n || v[lo+k-1].first != x){
+        cout << 0 << '\n';
+        continue;
+      }
+
+      cout << v[lo+k-1].second+1 << '\n';
+    }
+    return 0;
 }
+
