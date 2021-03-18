@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1871
-//URI 1871 - Zero vale Zero
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2694
+//URI 2694 - Problema com a Calculadora
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,16 +28,28 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int a, b;
-    while(cin >> a >> b && a + b){
-      int sum = a+b;
-      string s = to_string(sum);
-      string ans = "";
-      for(char c : s){
-        if(c != '0') ans += c;
-      }
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        string s;
+        cin >> s;
+        vector<string> nums;
+        const int N = (int)s.size();
+        for(int i = 0; i < N ; ++i){
+          while(i < N && isalpha(s[i])) i++;
+          string nu = "";
+          while(i < N && isdigit(s[i])){
+            nu += s[i];
+            i++;
+          }
+          nums.push_back(nu);
+        }
 
-      cout << ans << '\n';
+        int sum = 0;
+        for(string s : nums){
+          sum += atoi(s.c_str());
+        }
+        cout << sum << '\n';
     }
     return 0;
 }

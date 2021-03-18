@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1871
-//URI 1871 - Zero vale Zero
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2591
+//URI 2591 - HameKameKa
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,16 +28,17 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int a, b;
-    while(cin >> a >> b && a + b){
-      int sum = a+b;
-      string s = to_string(sum);
-      string ans = "";
-      for(char c : s){
-        if(c != '0') ans += c;
-      }
-
-      cout << ans << '\n';
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        string s;
+        cin >> s;
+        int a = 0, b = 0, i;
+        for(i = 1; s[i] == 'a' ; ++i) a++;
+        for(i = i+3; s[i] == 'a' ; ++i) b++;
+        string ans = "k";
+        for(int i = 0; i < a*b ; ++i) ans+='a';
+        cout << ans << '\n';
     }
     return 0;
 }
