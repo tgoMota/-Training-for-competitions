@@ -27,32 +27,20 @@ typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
-    //fastio();
+    fastio();
     int n;
     while(cin >> n){
       int m = (n-1)/2+1;
-      string f = " ";
-      for(int i = 1; i <= n ; ++i) f.push_back(' ');
-      vector<string> v(n+1, f);
-      for(int i = 1, j = 0; i <= m ; ++i, ++j){
-        for(int k = m-j; k <= m+j ; ++k){
-          v[i][k] = '*';
-        }
-        string line = "";
-        for(int ki = 1; ki <= m+j ; ++ki) line+=v[i][ki];
-        cout << line << '\n';
+      string f(m, ' ');
+      vector<string> v(m, f);
+      for(int i = 0, j = 0; i < m ; ++i, ++j){
+        v[i] += f.substr(0,j);
+        for(int k = m-j-1; k < m+j ; ++k) v[i][k] = '*';
+        cout << v[i] << '\n';
       }
-      for(int i = 1; i <= m ; ++i){
-        if(i == m) cout << '*';
-        else cout << ' ';
-      }
+      cout << v[0] << '\n';
+      cout << v[1] << '\n';
       cout << '\n';
-      for(int i = 1; i <= m+1 ; ++i){
-        if(i >= m-1) cout << '*';
-        else cout << ' ';
-      }
-      cout << "\n\n";
     }
     return 0;
 }
-
