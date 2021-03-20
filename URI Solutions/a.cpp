@@ -1,40 +1,39 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/1278
-//URI 1278 - Justificador II
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1868
+//URI 186 - Espiral Quadrada
 #include <bits/stdc++.h>
 using namespace std;
-
-void removeDuplicatedSpaces(string& x){
-  string ans = "";
-  const int N = (int)x.size();
-  int i;
-  for(i = 0; x[i] == ' ' ; ++i){}
-  for(; i < N ; ++i){
-    if(x[i] == ' ' && ans.back() == ' ') continue;
-    ans += x[i];
-  }
-  if(ans.back() == ' ') ans.pop_back();
-  x = ans;
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
+//CHECK THE CONSTRAINTS, PLEASE
+int dy[] = {1,0,-1,0}, dx[] = {0,-1,0,1};
+void print(vector<string>& grid, int posx, int posy){
+  grid[posx][posy] = 'X';
+  for(string& x : grid) cout << x << '\n';
+  grid[posx][posy] = 'O';
+  cout << "@\n";
 }
 int main(){
     fastio();
-    int t = 0, n;
+    int n;
     while(cin >> n && n){
-      if(t++) cout << '\n';
-      cin.ignore();
-      vector<string> lines(n);
-      int mxsize = 0;
-      for(int i = 0; i < n ; ++i){
-        getline(cin, lines[i]);
-        removeDuplicatedSpaces(lines[i]);
-        mxsize = max(mxsize,(int)lines[i].size());
+      vector<int> ind = {1,1,1,1};
+      vector<string> grid(n, string(n, 'O'));
+      int posx = (n-1)/2, posy = posx, cnt = 1;
+      print(grid, posx, posy);
+      bool ok = false;
+      while(!ok && cnt < n*n){
+        for(int d = 0; d < 4 && !ok ; ++d){
+          for(int i = 0; i < ind[d] ; ++i){
+            posx += dx[d], posy += dy[d];
+            print(grid, posx, posy);
+            if(++cnt == n*n){
+              ok = true;
+              break;
+            }
+          }
+          ind[d]++;
+          ind[(d+2)%4]++;
+        }
       }
-      
-      for(int i = 0; i < n ; ++i){
-        const int M  = (int)lines[i].size();
-        lines[i].insert(lines[i].begin(),mxsize-M ,' ');
-      }
-
-      for(string& line : lines) cout << line << '\n';
     }
     return 0;
 }
