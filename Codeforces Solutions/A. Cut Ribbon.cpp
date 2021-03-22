@@ -4,23 +4,16 @@
 using namespace std;
 #define oo 0x3f3f3f3f
 
-int comp[4], memo[4010];
-
-int pd(int t){
-    if(t == 0) return 0;
-    if(t < 0) return -oo;
-    int& ans = memo[t];
-    if(ans != -1) return ans;  
-    ans = -oo; 
-    for(int i = 1; i <= 3 ; ++i)
-        ans = max(ans, pd(t-comp[i]) + 1);
-    return ans;
-}
 
 int main(){
-
-    cin >> comp[0] >> comp[1] >> comp[2] >> comp[3];
-    memset(memo, -1, sizeof(memo));
-    cout << pd(comp[0])<< endl;
-    return 0;
+    vector<int> v;
+    sort(v.begin(), v.end(), [&](int a, int b){
+        if(a%2 == 0 && b%2 == 0){
+            return a < b;
+        }else if(a%2 == 0) return true;
+        else if(b%2 == 0) return true;
+        
+        return a < b;
+    });
+    
 }
