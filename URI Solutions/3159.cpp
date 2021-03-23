@@ -36,6 +36,7 @@ int main(){
       char cur = ch;
       for(int i = 1; i <= limit ; ++i){
         string sub = string(i, d);
+        //trace(sub, d, cur);
         mp[cur] = sub;
         cur++;
       }
