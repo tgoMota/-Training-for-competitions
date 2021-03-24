@@ -1,3 +1,5 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2722
+//URI 2722 - Pegadinha de Evergreen
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,8 +30,26 @@ int main(){
     fastio();
     int t;
     cin >> t;
+    cin.ignore();
     for(int ti = 1; ti <= t ; ++ti){
-        
+        string a, b;
+        getline(cin, a);
+        getline(cin, b);
+        string ans = "";
+        const int N = (int)a.size();
+        const int M =(int)b.size();
+        for(int i = 0, j = 0, turn = 0; i < N || j < M ; turn = (turn+1)%2){
+          if(turn == 0 && i < N){
+            ans += a[i++];
+            ans += a[i++];
+          }
+          if(turn == 1){
+            if(j < M) ans += b[j++];
+            if(j < M) ans += b[j++];
+          }
+        }
+
+        cout << ans << '\n';
     }
     return 0;
 }

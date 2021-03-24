@@ -1,3 +1,5 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2356
+//URI 2356 - Bactéria I
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,10 +28,10 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    string a, b;
+    while(cin >> a >> b){
+      if(strstr(a.c_str(), b.c_str())) cout << "Resistente\n";
+      else cout << "Nao resistente\n";
     }
     return 0;
 }

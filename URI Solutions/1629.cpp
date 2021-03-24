@@ -1,3 +1,5 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1629
+//URI 1629 - DescompactaFACE
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -27,9 +29,28 @@ typedef pair<int,int> ii;
 int main(){
     fastio();
     int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    while(cin >> t && t){
+      for(int ti = 1; ti <= t ; ++ti){
+          string num;
+          cin >> num;
+          int zeros = 0, ones = 0;
+          for(int i = 0; i < (int)num.size() ; ++i){
+            if(i%2 == 0) zeros += num[i]-'0';
+            else ones+=num[i]-'0';
+          }
+
+          string a = to_string(zeros), b = to_string(ones);
+          int sum = 0;
+          for(char c : a){
+            sum += c-'0';
+          }
+
+          for(char c : b){
+            sum += c-'0';
+          }
+
+          cout << sum << '\n';
+      }
     }
     return 0;
 }

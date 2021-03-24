@@ -1,3 +1,5 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1276
+//URI 1276 - Faixa de Letras
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,10 +28,30 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    string line;
+    while(getline(cin, line)){
+      unordered_map<char, bool> mp;
+      for(char c : line){
+        mp[c] = true;
+      }
+      vector<string> ans;
+      for(char c  = 'a'; c <= 'z' ; ){
+        if(!mp.count(c)){
+          c++;
+          continue;
+        }
+        string tmp = "";
+        tmp+=c;
+        tmp += ":";
+        while(mp.count(++c)){}
+        tmp+= (c-1);
+        ans.push_back(tmp);
+      }
+      for(int i = 0; i < (int)ans.size(); ++i){
+        if(i) cout << ", ";
+        cout << ans[i];
+      }
+      cout << '\n';
     }
     return 0;
 }

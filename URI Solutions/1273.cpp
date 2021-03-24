@@ -1,3 +1,5 @@
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1273
+//URI 1273 - Justificador
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,13 +26,26 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+vector<string> v;
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    int n, t = 0;
+    while(cin >> n && n){ 
+      v.clear();
+      int mx_len = 0;
+      if(t++) cout << '\n';
+      for(int i = 0; i < n ; ++i){
+        string a;
+        cin >> a;
+        v.push_back(a);
+        mx_len = max(mx_len, (int)a.size());
+      }
+      for(string& x : v){
+        for(int i = 0; i < mx_len-x.size() ; ++i) cout << ' ';
+        cout << x << '\n';
+      }
     }
+   
     return 0;
 }
 
