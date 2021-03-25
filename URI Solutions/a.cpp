@@ -1,43 +1,34 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/3065
+//URI 3065 - Calculando
 #include <bits/stdc++.h>
 using namespace std;
-#define oo 0x3f3f3f3f
-#define ooLL 0x3f3f3f3f3f3f3f3f
-#define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
-#define LOCAL
-#ifdef LOCAL
-#define trace(...) __f(#__VA_ARGS__, __VA_ARGS__)
-#else
-#define trace(...) 42
-#endif
-template <typename Arg1>
-void __f(const char* name, Arg1&& arg1){
-  cerr << name << ": " << arg1 << endl;
-}
-template <typename Arg1, typename... Args>
-void __f(const char* names, Arg1&& arg1, Args&&... args){
-  const char* comma = strchr(names + 1, ',');
-  cerr.write(names, comma - names) << ": " << arg1 << " |";
-  __f(comma + 1, args...);
-}
-const int mod = 1e9+7;
-typedef long long ll;
-typedef long double ld;
-typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
-    fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    int n, t = 1;
+    while(cin >> n && n){
+      string ex;
+      cin >> ex;
+      string ops = "";
+      vector<int> nums;
+      const int N = (int)ex.size();
+      stack<char> st;
+      int sum = 0;
+      for(int i = 0; i < N ;){
+        string num_str = "";
+        while(i < N && isdigit(ex[i])) num_str += ex[i++];
+        int num = stoi(num_str);
+        if(st.empty()) sum += num;
+        else{
+          char op = st.top();
+          st.pop();
+          if(op == '+') sum += num;
+          else sum -= num;
+        }
+
+        if(i < N) st.push(ex[i++]);
+      }
+      cout << "Teste " << t++ << '\n';
+      cout << sum << "\n\n";
     }
     return 0;
 }
