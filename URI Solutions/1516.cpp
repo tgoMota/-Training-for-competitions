@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1516
+//URI 1516 - Imagem
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,16 +28,25 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    int n, m;
+    while(cin >> n >> m && n+m){
+      vector<string> grid(n);
+      for(int i = 0; i < n ; ++i){
+        cin >> grid[i];
+      }
+      int A, B;
+      cin >> A >> B;
+      int multN = A/n, multM = B/m;
+      for(int i = 0; i < n ; ++i){
+        string new_line = "";
+        for(int j = 0; j < grid[i].size() ; ++j){
+          new_line+= string(multM, grid[i][j]);
+        }
+        for(int j = 0; j < multN ; ++j) {
+          cout << new_line << '\n';
+        }
+      }
+      cout << '\n';
     }
     return 0;
 }

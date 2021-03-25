@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2174
+//URI 2174 - Coleção de Pomekon
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,17 +28,16 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
+    int n;
+    cin >> n;
+    set<string> s;
+    for(int i = 0; i < n ; ++i){
       string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+      cin >> line;
+      s.insert(line);
     }
+
+    cout << "Falta(m) "  <<151 - (int)s.size() << " pomekon(s)." <<'\n';
     return 0;
 }
 

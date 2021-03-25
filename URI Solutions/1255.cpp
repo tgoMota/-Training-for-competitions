@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1255
+//URI 1255 - Frequência de Letras
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,16 +28,25 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    string line;
+    int n;
+    while(cin  >>  n){
+      cin.ignore();
+      while(n-- && getline(cin, line)){
+        map<char, int> cnt;
+        int mx = 0;
+        for(char& c : line){
+          if(!isalpha(c)) continue;
+          c = tolower(c);
+          cnt[c]++;
+          mx = max(mx, cnt[c]);
+        }
+        string ans = "";
+        for(auto x : cnt){
+          if(x.second == mx) ans+=x.first;
+        }
+        cout << ans << '\n';
+      }
     }
     return 0;
 }

@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2023
+//URI 2023 - A Última Criança Boa
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,17 +28,23 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    string line;
+    vector<string> v;
+    while(getline(cin, line)){
+      v.push_back(line);
     }
+    auto tolow = [](char c){
+      return tolower(c);
+    };
+    sort(v.begin(), v.end(), [&](string a, string b){
+      string _a = a, _b = b;
+      transform(_a.begin(), _a.end(), _a.begin(),tolow);
+      transform(_b.begin(), _b.end(), _b.begin(),tolow);
+
+      return lexicographical_compare(_a.begin(), _a.end(), _b.begin(), _b.end());
+    });
+
+    cout << v.back() << '\n';
     return 0;
 }
 

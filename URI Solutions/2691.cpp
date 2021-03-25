@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2691
+//URI 2691 - O Matemático
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -27,18 +27,16 @@ typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
-    fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+   // fastio();
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int a, b;
+        scanf("%dx%d", &a, &b);
+        for(int i = 5; i <= 10; ++i){
+          if(a != b) printf("%d x %d = %d && %d x %d = %d\n", a, i, a*i, b, i, b*i);
+          else printf("%d x %d = %d\n", a, i, a*i);
+        }
     }
     return 0;
 }
-

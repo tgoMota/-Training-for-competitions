@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1367
+//URI 1367 - Ajude!
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -27,17 +27,27 @@ typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
-    fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    int n;
+    while(cin >> n && n){
+      map<string,int> penalt;
+      map<string, int> accept;
+      string q;
+      int t, sumt = 0;
+      string veredict;
+      for(int i = 0; i < n ; ++i){
+         cin >> q >> t >> veredict;
+         if(veredict == "incorrect") {
+          penalt[q]+=20;
+         }
+         else {
+           if(!accept.count(q)) accept[q] = t + penalt[q];
+         }
+      }
+
+      for(auto x : accept) sumt+=x.second;
+
+      cout << (int)accept.size() << " " << sumt << '\n';
+
     }
     return 0;
 }

@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2150
-//URI 2150 - Vogais Alienígenas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/1305
+//URI 1305 - Arredondamento por Valor de Corte
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,16 +28,14 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    string vog;
-    while(getline(cin, vog)){
-      set<char> s;
-      for(char c : vog) s.insert(c);
-      int ans = 0;
-      string line;
-      getline(cin, line);
-      if(cin.eof()) break;
-      for(char c : line) ans += s.count(c);
-      cout << ans << '\n';
+    string a, b;
+    while(cin >> a >> b){
+     double fa = stod(a);
+     double fb = stod(b);
+     int numa = (int)fa;
+     double frac = fa-numa;
+     if(frac >= fb) numa++;
+     cout << numa << '\n';
     }
     return 0;
 }
