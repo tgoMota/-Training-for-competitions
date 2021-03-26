@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2690
-//URI 2690 - Nova Senha RA
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2108
+//URI 2108 - Contando Caracters
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,38 +26,35 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-map<char, char> mp;
-void pushAll(string keys, int value){
-  for(char c : keys){
-    mp[c] = value;
-  }
-}
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    pushAll("GQaku", '0');
-    pushAll("ISblv", '1');
-    pushAll("EOYcmw", '2');
-    pushAll("FPZdnx", '3');
-    pushAll("JTeoy", '4');
-    pushAll("DNXfpz", '5');
-    pushAll("AKUgq", '6');
-    pushAll("CMWhr", '7');
-    pushAll("BLVis", '8');
-    pushAll("HRjt", '9');
     string line;
-    getline(cin, line);
-    for(int ti = 1; ti <= t ; ++ti){
-        getline(cin, line);
-        string ans = "";
-        for(int i = 0, cnt = 0; i < (int)line.size() && cnt < 12 ; ++i){
-          if(!isalpha(line[i])) continue;
-          ans += mp[line[i]];
+    pair<int, string> mxWord = {0,""};
+    while(getline(cin, line) && line != "0"){
+      int cnt = 0;
+      const int N = (int)line.size();
+      bool first = true;
+      string word = "";
+      for(int i = 0; i < N ; ++i){
+        if(line[i] == ' '){
+          if(cnt > mxWord.first) mxWord = {cnt, word};
+          if(first) cout << cnt;
+          else cout << '-' << cnt;
+          first = false;
+          cnt = 0;
+          word = "";
+        }else{
+          word += line[i];
           cnt++;
         }
-        cout << ans << "\n";
+      }
+      if(cnt >= mxWord.first) mxWord = {cnt, word};
+      if(first) cout << cnt << '\n';
+      else cout << '-' << cnt << '\n';
     }
+
+    cout << '\n';
+    cout << "The biggest word: " << mxWord.second << '\n';
     return 0;
 }
 

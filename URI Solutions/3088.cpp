@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2690
-//URI 2690 - Nova Senha RA
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/3088
+//URI 3088 - Correção de Texto
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,37 +26,16 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-map<char, char> mp;
-void pushAll(string keys, int value){
-  for(char c : keys){
-    mp[c] = value;
-  }
-}
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    pushAll("GQaku", '0');
-    pushAll("ISblv", '1');
-    pushAll("EOYcmw", '2');
-    pushAll("FPZdnx", '3');
-    pushAll("JTeoy", '4');
-    pushAll("DNXfpz", '5');
-    pushAll("AKUgq", '6');
-    pushAll("CMWhr", '7');
-    pushAll("BLVis", '8');
-    pushAll("HRjt", '9');
     string line;
-    getline(cin, line);
-    for(int ti = 1; ti <= t ; ++ti){
-        getline(cin, line);
-        string ans = "";
-        for(int i = 0, cnt = 0; i < (int)line.size() && cnt < 12 ; ++i){
-          if(!isalpha(line[i])) continue;
-          ans += mp[line[i]];
-          cnt++;
-        }
-        cout << ans << "\n";
+    while(getline(cin, line)){
+      const int N = (int)line.size();
+      for(int i = 0; i < N ; ++i){
+        if(i < N-1 && line[i] == ' ' && (line[i+1] == '.' || line[i+1] == ',')) continue;
+        cout << line[i];
+      }
+      cout << '\n';
     }
     return 0;
 }
