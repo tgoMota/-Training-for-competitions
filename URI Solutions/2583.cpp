@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2253
-//URI 2253 - Validador de Senhas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2583
+//URI 2583 - Chirrin Chirrion
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,21 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int cnt = 0;
-    for(int i = 0; i < (int)a.size() ; ++i){
-      if(a[i] != b[i]) cnt++;
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int n;
+        cin >> n;
+        set<string> ans;
+        cout << "TOTAL\n";
+        string a, b;
+        for(int i = 0; i < n ; ++i){
+          cin >> a >> b;
+          if(b == "chirrin") ans.insert(a);
+          if(b == "chirrion") ans.erase(a);
+        }
+        for(string x : ans) cout << x << '\n';
     }
-    cout << cnt << '\n';
+    return 0;
 }
 

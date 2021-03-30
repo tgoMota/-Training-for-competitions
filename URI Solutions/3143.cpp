@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2253
-//URI 2253 - Validador de Senhas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/3143
+//URI 3143 - Fugindo do Celular
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,25 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int cnt = 0;
-    for(int i = 0; i < (int)a.size() ; ++i){
-      if(a[i] != b[i]) cnt++;
+    int M;
+    cin >> M;
+    string line;
+    getline(cin, line);
+    int ans = 0;
+    while(getline(cin, line)){
+      int N = (int)line.size();
+      for(int i = 0; i < N ;){
+        if(line[i] == ' '){
+          i++;
+          continue;
+        }
+        ans++;
+        i+=M;
+      }
     }
-    cout << cnt << '\n';
+
+    cout << ans << '\n';
+
+    return 0;
 }
 

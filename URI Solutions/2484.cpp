@@ -1,5 +1,5 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2253
-//URI 2253 - Validador de Senhas
+//https://www.urionlinejudge.com.br/judge/pt/problems/view/2484
+//URI 2484 - Abracadabra
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,19 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int cnt = 0;
-    for(int i = 0; i < (int)a.size() ; ++i){
-      if(a[i] != b[i]) cnt++;
+    string s;
+    while(cin >> s){
+      const int N = (int)s.size();
+      for(int i = 0; i < N ; ++i){
+        cout << string(i, ' ');
+        for(int j = 0; j < N-i ; ++j){
+          if(j) cout << " ";
+          cout << s[j];
+        }
+        cout << '\n';
+      }
+      cout << '\n';
     }
-    cout << cnt << '\n';
+    return 0;
 }
 
