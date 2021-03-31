@@ -1,5 +1,3 @@
-//https://codeforces.com/contest/1496/problem/B
-//Codeforces | B. Max and Mex
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,45 +24,33 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-set<int> s;
 int main(){
     fastio();
     int t;
     cin >> t;
     for(int ti = 1; ti <= t ; ++ti){
-        s.clear();
-        int n, k, mx = 0;
-        cin >> n >> k;
-        for(int i = 0; i < n ; ++i){
-          int a;
-          cin >> a;
-          s.insert(a);
-          mx = max(mx, a);
+        int n;
+        cin >> n;
+        vector<int> v(n);
+        for(int& x : v) cin >> x;
+        pair<int,int> mx = {0,1};
+        for(int i = 2; i < n ; i+=2){
+          int summx = v[mx.first] + v[mx.second];
+          int new_sum = v[i]+v[i-1];
+          if(new_sum < summx) mx = {i-1,i};
         }
 
-        auto it = s.begin();
-        int krest = k, ans = 0, nextMex = 0;
-        while(krest){
-         for(; it != s.end() ; ++it){
-            int val = *it;
-            if(nextMex != val) break;
-            nextMex++;
-          }
-          mx = max(mx, nextMex);
-          if(mx == nextMex){
-            ans = (int)s.size() + krest;
-            break;
-          }
-          int m = (nextMex + mx-1)/2+1;
-          if(m != nextMex && m <= mx){
-            s.insert(m);
-            ans = (int)s.size();
-            break;
-          }
-          s.insert(m);
-          krest--;
+        ll ans = 0LL;
+        int l = 0, r = 0;
+        for(int i = 0; i < mx.first ; ++i){
+          l += (i%2 == 0);
+          r += (i%2 != 0);
+          ans += v[i];
         }
-        if(!krest) ans = (int)s.size();
+        l = n-l;
+        r = n-r;
+        trace(ans, l, r, mx.first, mx.second, v[mx.first], v[mx.second]);
+        ans+= l*v[mx.first]+r*v[mx.second];
         cout << ans << '\n';
     }
     return 0;

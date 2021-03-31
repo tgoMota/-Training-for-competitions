@@ -28,10 +28,43 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int cnt = 0;
-    for(int i = 0; i < (int)a.size() ; ++i){
-      if(a[i] != b[i]) cnt++;
+    string line;
+    while(getline(cin, line) && line != "."){
+      vector<pair<string,int>> v;
+      vector<pair<int,string>> v2;
+      map<string,string> mp;
+      map<string,int> cnt;
+      stringstream ss(line);
+      string token;
+      int idx = 0;
+      while(getline(ss, token, ' ')){
+        v.push_back({token, idx++});
+        cnt[token] += (int)token.size();
+      }
+      sort(v.begin(), v.end(), [&](pair<string,int>& a, pair<string,int>& b){
+        return cnt[a.first] > cnt[b.first];
+      });
+
+      for(pair<string,int>& x : v){
+        string s = x.first.substr(0,1)+".";
+        if((int)x.first.size() <= 2){
+          v2.push_back({x.second, x.first});
+          continue;
+        }
+        if(mp.count(s)) continue;
+        mp[s] = x.first;
+        v2.push_back({x.second,s});
+      }
+      sort(v2.begin(), v2.end());
+      for(int i = 0; i < (int)v2.size() ; ++i){
+        if(i) cout << " ";
+        cout << v2[i].second;
+      }
+      cout << '\n';
+      cout << (int)mp.size() << '\n';
+      for(auto x : mp){
+        cout << x.first << " = " << x.second << '\n';
+      }
     }
-    cout << cnt << '\n';
 }
 
