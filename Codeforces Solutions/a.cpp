@@ -31,26 +31,17 @@ int main(){
     for(int ti = 1; ti <= t ; ++ti){
         int n;
         cin >> n;
-        vector<int> v(n);
-        for(int& x : v) cin >> x;
-        pair<int,int> mx = {0,1};
-        for(int i = 2; i < n ; i+=2){
-          int summx = v[mx.first] + v[mx.second];
-          int new_sum = v[i]+v[i-1];
-          if(new_sum < summx) mx = {i-1,i};
+        vector<ll> v(n);
+        for(ll& x : v) cin >> x;
+        int l = n, r = n;
+        ll ans = ooLL, sum = 0LL, mxl = oo, mxr = oo;
+        for(int i = 0; i < n ; ++i){
+          sum+=v[i];
+          if(i%2) l--, mxl = min(mxl, v[i]);
+          else r--, mxr = min(mxr, v[i]);
+          ans = min(ans, sum + l*mxl + r*mxr);
         }
 
-        ll ans = 0LL;
-        int l = 0, r = 0;
-        for(int i = 0; i < mx.first ; ++i){
-          l += (i%2 == 0);
-          r += (i%2 != 0);
-          ans += v[i];
-        }
-        l = n-l;
-        r = n-r;
-        trace(ans, l, r, mx.first, mx.second, v[mx.first], v[mx.second]);
-        ans+= l*v[mx.first]+r*v[mx.second];
         cout << ans << '\n';
     }
     return 0;

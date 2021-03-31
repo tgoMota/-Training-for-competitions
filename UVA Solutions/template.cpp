@@ -23,12 +23,14 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
-//CHECK THE LIMITS, PLEASE
+//CHECK THE CONSTRAINTS, PLEASE
 int main(){
+    fastio();
     int t;
-    scanf("%d", &t);
+    cin >> t;
     for(int ti = 1; ti <= t ; ++ti){
         
     }
     return 0;
 }
+
