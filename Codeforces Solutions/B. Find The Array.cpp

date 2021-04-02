@@ -1,5 +1,5 @@
-//https://codeforces.com/problemset/problem/1462/D
-//D. Add to Neighbour and Remove
+//https://codeforces.com/problemset/problem/1463/B
+//B. Find The Array
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -34,27 +34,25 @@ int main(){
         int n;
         cin >> n;
         vector<int> v(n);
-        ll sum = 0LL;
+        for(int& x : v) cin >> x;
+        ll sum1 = 0LL, sum2 = 0LL;
         for(int i = 0; i < n ; ++i){
-          cin >> v[i];
-          sum += v[i];
-        }
-        bool ok = false;
-        for(int i = n; i > 0 && !ok; --i){
-          if(sum%i) continue;
-          ll need = sum/i;
-          ll sum_tmp = 0LL;
-          for(int j = 0; j < n ; ++j){
-            sum_tmp+=v[j];
-            if(sum_tmp > need) break;
-            if(sum_tmp == need) sum_tmp = 0LL;
-          }
-          if(sum_tmp == 0){
-            cout << (n-i) << '\n';
-            ok = true;
+          if(i%2){
+            sum1 += v[i]-1;
+          }else{
+            sum2+=v[i]-1;
           }
         }
-        assert(ok);
+        for(int i = 0; i < n ; ++i){
+          if(i%2){
+            if(sum1 < sum2) cout << 1 << ' ';
+            else cout << v[i] << ' ';
+          }else{
+            if(sum1 < sum2) cout << v[i] << ' ';
+            else cout << 1 << ' ';
+          }
+        }
+        cout << '\n';
     }
     return 0;
 }
