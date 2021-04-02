@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1461/problem/B
+//B. Find the Spruce
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -31,35 +33,21 @@ int main(){
     for(int ti = 1; ti <= t ; ++ti){
         int n, m;
         cin >> n >> m;
-        string a, b;
-        cin >> a >> b;
-        sort(a.begin(), a.end());
-        sort(b.begin(), b.end());
-        if(a == b){
-          cout << "Yes\n";
-          continue;
-        }
-        map<char, int> mp;
-        for(char c : a) mp[c]++;
-
-        map<char,int> mp2;
-        for(char c : b){
-          mp2[c]++;
-        }
-        int dif = 0;
-        int mx = 0;
-        for(char c : b){
-          dif += abs(mp2[c]-mp[c]);
-          if(mp[c]-mp2[c] > mx){
-            mx = mp[c]-mp2[c];
+        vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+        ll ans = 0LL;
+        for(int i = 1; i <= n ; ++i){
+          string line;
+          cin >> line;
+          for(int j = 1; j <= m ; ++j){
+            if(line[j-1] == '*') dp[i][j] = dp[i][j-1] + 1;
+          }
+          for(int j = 1; j <= m ; ++j){
+            dp[i][j] = min((dp[i][j]+1)>>1, dp[i-1][j-1]+1);
+            ans += dp[i][j];
           }
         }
 
-        if(mx < m){
-          cout << "No\n";
-          continue;
-        }
-
+        cout << ans << '\n';
     }
     return 0;
 }
