@@ -1,6 +1,4 @@
-#include <cstdio>
-#include <algorithm>
-#include <cstring>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef pair<int, int> ii;
@@ -48,37 +46,6 @@ void makeSA() {
 	}
 }
 
-ii strMatch() {
-	int lo = 0, hi = n - 1, mid = lo;
-	while (lo < hi) {
-		mid = (lo + hi) / 2;
-		int res = strncmp(T + SA[mid], P, m);
-		if (res >= 0)
-			hi = mid;
-		else
-			lo = mid + 1;
-	}
-	if (strncmp(T + SA[lo], P, m) != 0)
-		return ii(-1, -1);
-	ii ans;
-	ans.first = lo;
-	lo = 0;
-	hi = n - 1;
-	mid = lo;
-	while (lo < hi) {
-		mid = (lo + hi) / 2;
-		int res = strncmp(T + SA[mid], P, m);
-		if (res > 0)
-			hi = mid;
-		else
-			lo = mid + 1;
-	}
-	if (strncmp(T + SA[hi], P, m) != 0)
-		hi--;
-	ans.second = hi;
-	return ans;
-}
-
 void compLCP() {
 	int i, L;
 	phi[SA[0]] = -1;
@@ -98,35 +65,64 @@ void compLCP() {
 		LCP[i] = PLCP[SA[i]];
 }
 
-int main() {
-	int tc;
+bool comp(ii a, ii b){
+    if(a.first == b.first) return a.second > b.second;
+    return a.first > b.first;
+}
 
-	scanf("%d", &tc);
-	while (tc--) {
-		scanf("%s", T);
+struct minqueue{
+    deque<pair<ii,int>> q;
+    int cnt_added, cnt_removed;
+    minqueue(){
+        cnt_added = cnt_removed = 0;
+    }
+    void push(ii new_element){
+        while (!q.empty() && comp(q.back().first, new_element)) q.pop_back();
+        q.push_back(make_pair(new_element, cnt_added));
+        cnt_added++;
+    }
+
+    ii getMin(){
+        return q.front().first;
+    }
+
+    void pop(){
+        if (!q.empty() && q.front().second == cnt_removed) 
+            q.pop_front();
+        cnt_removed++;
+    }
+};
+
+void max_self(ii& a, ii b){
+    if(a.first == b.first && a.second > b.second) a = b;
+    else if(a.first < b.first) a = b;
+}
+
+int main() {
+		int k;
+		fgets(T, sizeof(T), stdin);
 		strcat(T, "$");
 		n = strlen(T);
+		scanf("%d", &k);
 		makeSA();
 		compLCP();
-
-		int maximum = 0, maxidx = -1;
-		for (int i = 0; i < n; i++) {
-			if (LCP[i] > maximum) {
-				maximum = LCP[i];
-				maxidx = i;
-			}
+		minqueue q;
+		for(int i = 0; i < min(k-1,n) ; ++i){
+        	q.push({LCP[i], SA[i]});
 		}
-
-		if (maxidx > -1) {
-			strncpy(P, T + SA[maxidx], LCP[maxidx]);
-			P[LCP[maxidx]] = '\0';
-			m = strlen(P);
-			ii pos = strMatch();
-			printf("%s %d\n", P, pos.second - pos.first + 1);
-		} else {
-			printf("No repetitions found!\n");
+		ii best = {0,0};
+		for(int i = k-1; i < n ; ++i){
+			max_self(best, q.getMin());
+			q.pop();
+			q.push({LCP[i], SA[i]});
 		}
-	}
+		max_self(best, q.getMin());
+		if(best.first > 0) {
+			for(int i = best.second; i < best.second + best.first ; ++i) cout << T[i];
+			cout << '\n';
+		}
+		else cout << ":)\n";
+		
 
 	return 0;
 }

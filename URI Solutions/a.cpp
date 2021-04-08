@@ -6,6 +6,7 @@ using namespace std;
 #else
 #define trace(...) 42
 #endif
+#define oo 0x3f3f3f3f
 template <typename Arg1>
 void __f(const char* name, Arg1&& arg1){
   cerr << name << ": " << arg1 << endl;
@@ -17,145 +18,157 @@ void __f(const char* names, Arg1&& arg1, Args&&... args){
   __f(comma + 1, args...);
 }
 typedef pair<int,int> ii;
-vector<int> sort_cyclic_shifts(string const& s) {
-    int n = (int)s.size();
-    const int alphabet = 256;
-    vector<int> p(n), c(n), cnt(max(alphabet, n), 0);
-    for (int i = 0; i < n; i++)
-        cnt[s[i]]++;
-    for (int i = 1; i < alphabet; i++)
-        cnt[i] += cnt[i-1]; //representa o rank de cada caractere
-    for (int i = 0; i < n; i++){
-        p[--cnt[s[i]]] = i; // p[i] representa a posicao do caractere em s que ocupa a i'nésima ordem lexicografica
+struct suffixArray{
+    vector<int> SA, tempSA, RA, tempRA, c;
+    vector<int> LCP, Phi, PLCP;
+    string s;
+    int N;
+    suffixArray(){}
+    suffixArray(string _s){
+        s = _s + "!";
+        N = (int)s.size();
+        SA.assign(N, 0);
+        RA.assign(N, 0);
+        tempSA.assign(N, 0);
+        tempRA.assign(N, 0);
+        LCP.assign(N, 0);
+        Phi.assign(N, 0);
+        PLCP.assign(N, 0);
+        buildSA();
+        buildLCP();
+        SA.erase(SA.begin());
+        LCP.erase(LCP.begin());
     }
-    c[p[0]] = 0;
-    int classes = 1;
-    for (int i = 1; i < n; i++) {
-        if (s[p[i]] != s[p[i-1]])
-            classes++;
-        c[p[i]] = classes - 1;
+
+    void countingSort(int k){
+        int sum = 0, maxi =  max(300,N);
+        c.assign(maxi, 0);
+        for(int i = 0; i < N ; ++i) c[RA[(i+k)%N]]++;
+        for(int i = 1; i < maxi ; ++i) c[i]+=c[i-1];
+        for(int i = N-1 ; i >= 0 ; --i) tempSA[--c[RA[(SA[i]+k)%N]]] = SA[i];
+        SA = tempSA;
     }
-    vector<int> pn(n), cn(n);
-    for (int h = 0; (1 << h) < n; ++h) {
-        for (int i = 0; i < n; i++) {
-            pn[i] = p[i] - (1 << h);
-            if (pn[i] < 0) pn[i] += n;
+
+    void buildSA(){
+        for(int i = 0; i < N ; ++i) {
+            SA[i] = i;
+            RA[i] = s[i];
         }
-        fill(cnt.begin(), cnt.begin() + classes, 0);
-        for (int i = 0; i < n; i++){
-            cnt[c[pn[i]]]++;
+        for(int k = 1; k < N ; k <<= 1){
+            countingSort(k);
+            countingSort(0);
+            int r = tempRA[SA[0]] = 0;
+            for(int i = 1; i < N ; ++i){
+                tempRA[SA[i]] =  (ii(RA[SA[i]], RA[(SA[i]+k)%N]) == ii(RA[SA[i-1]], RA[(SA[i-1]+k)%N]) ? r : ++r);
+            }
+            RA = tempRA;
+            if(RA[SA[N-1]] == N-1) break;
         }
-        for (int i = 1; i < classes; i++)
-            cnt[i] += cnt[i-1];
-        for (int i = n-1; i >= 0; i--){
-            p[--cnt[c[pn[i]]]] = pn[i];
-        }
-        cn[p[0]] = 0;
-        classes = 1;
-        for (int i = 1; i < n; i++) {
-            pair<int, int> cur = {c[p[i]], c[(p[i] + (1 << h)) % n]};
-            pair<int, int> prev = {c[p[i-1]], c[(p[i-1] + (1 << h)) % n]};
-            if (cur != prev)
-                ++classes;
-            cn[p[i]] = classes - 1;
-        }
-        c.swap(cn);
     }
-    return p;
-}
 
-vector<int> suffix_array_construction(string s) {
-    s += "$";
-    vector<int> sorted_shifts = sort_cyclic_shifts(s);
-    sorted_shifts.erase(sorted_shifts.begin());
-    return sorted_shifts;
-}
-
-vector<int> lcp(string const& s, vector<int> const& p) {
-    int n = (int)s.size();
-    vector<int> rank(n+1, 0);
-    for (int i = 0; i < n; i++)
-        rank[p[i]] = i;
-
-    int k = 0;
-    vector<int> lcp(n+1, 0);
-    for (int i = 0; i < n; i++) {
-        if (rank[i] == n-1) {
-            k = 0;
-            continue;
+    void buildLCP(){
+        Phi[SA[0]] = -1;
+        for(int i = 1; i < N ; ++i) Phi[SA[i]] = SA[i-1];
+        for(int i = 0, k = 0; i < N ; ++i){
+            if(Phi[i] == -1){
+                PLCP[i] = 0;
+                continue;
+            }
+            while(s[i+k] == s[Phi[i]+k]) ++k;
+            PLCP[i] = k;
+            k = max(k-1,0);
         }
-        int j = p[rank[i] + 1];
-        while (i + k < n && j + k < n && s[i+k] == s[j+k]) k++;
-        lcp[rank[i]] = k;
-        if (k) k--;
+        for(int i = 0; i < N ; ++i) LCP[i] = PLCP[SA[i]];
     }
-    return lcp;
-}
 
-bool comp(ii a, ii b){
-    if(a.first == b.first) return a.second > b.second;
-    return a.first > b.first;
-}
+    void printSA(){
+        cout << "SA: ";
+        for(int i = 0; i < N ; ++i) cout << SA[i] << ' ';
+        cout << '\n';
+    }
+
+    void printLCP(){
+        trace(s);
+        cout << "LCP: ";
+        for(int i = 0; i < LCP.size() ; ++i) cout << LCP[i] << ' ';
+        cout << '\n';
+        cout << "IDX: ";
+        for(int i = 0; i < LCP.size() ; ++i) cout << i << ' ';
+        cout << '\n';
+    }
+
+    void printAllSu(){
+        for(int i = 0; i < SA.size() ; ++i) cout << SA[i] << ": " <<s.substr(SA[i], LCP[i]) << '\n';
+    }
+};
+unordered_map<char,int> firstOc;
+string line;
 
 struct minqueue{
-    deque<pair<ii,int>> q;
+    deque<pair<int,int>> q;
     int cnt_added, cnt_removed;
     minqueue(){
-        cnt_added = cnt_removed = 0;
+        clear();
     }
-    void push(ii new_element){
-        while (!q.empty() && comp(q.back().first, new_element)) q.pop_back();
+    void push(int new_element){
+        while (!q.empty() && q.back().first > new_element) q.pop_back();
         q.push_back(make_pair(new_element, cnt_added));
         cnt_added++;
     }
 
-    ii getMin(){
+    int getMin(){
         return q.front().first;
     }
 
     void pop(){
-        if (!q.empty() && q.front().second == cnt_removed) 
-            q.pop_front();
+        if (!q.empty() && q.front().second == cnt_removed) q.pop_front();
         cnt_removed++;
+    }
+    void clear(){
+        cnt_added = cnt_removed = 0;
+        q.clear();
     }
 };
 
-void max_self(ii& a, ii b){
-    if(a.first == b.first && a.second > b.second) a = b;
-    else if(a.first < b.first) a = b;
-}
-
-int owner(int idx) { return (idx < n-m-1) ? 1 : 2; }
-
-ii LCS() {                 // returns a pair (the LCS length and its index)
-  int i, idx = 0, maxLCP = -1;
-  for (i = 1; i < n; i++)                         // O(n), start from i = 1
-    if (owner(SA[i]) != owner(SA[i-1]) && LCP[i] > maxLCP)
-      maxLCP = LCP[i], idx = i;
-  return ii(maxLCP, idx);
-}
 
 int main(){
     int k;
-    string line;
     getline(cin, line);
-    cin >> k;
-    vector<int> suf_array = suffix_array_construction(line);
-    const int N = (int)suf_array.size();
-    vector<int> lp = lcp(line, suf_array);
+    for(char& c : line) if(c == ' ') c = '$';
 
+    cin >> k;
+    if(k > (int)line.size()){
+        cout << ":)\n";
+        return 0;
+    }
+    if(k == 1){
+        cout << line << '\n';
+        return 0;
+    }
+    suffixArray SA(line);
     minqueue q;
-    for(int i = 0; i < min(k-1,N) ; ++i){
-        q.push({lp[i], suf_array[i]});
-    }
-    ii best = {0,0};
-    for(int i = k-1; i < N ; ++i){
-        max_self(best, q.getMin());
+    //SA.printSA();
+    //SA.printLCP();
+    //SA.printAllSu();
+    int best = 0;
+    for(int i = 0; i < (int)SA.SA.size() ; ++i){
+        if(i < k-1){
+            q.push(SA.LCP[i]);
+            continue;
+        }
+        best = max(best, q.getMin());
         q.pop();
-        q.push({lp[i], suf_array[i]});
+        q.push(SA.LCP[i]);
     }
-    max_self(best, q.getMin());
-    if(best.first > 0) cout << line.substr(best.second, best.first) << '\n';
+    best = max(best, q.getMin());
+    
+    int posmin = oo;
+    for(int i = 1; i < (int)SA.SA.size() ; ++i){
+        if(SA.LCP[i] == best) posmin = min(posmin, min(SA.SA[i-1], SA.SA[i]));
+    }
+    for(char& c : line) if(c == '$') c = ' ';
+    //trace(best, posmin, line, line.size(), SA.SA.size(), SA.LCP.size());
+    if(best > 0) cout << line.substr(posmin, best) << '\n';
     else cout << ":)\n";
     return 0;
 }
