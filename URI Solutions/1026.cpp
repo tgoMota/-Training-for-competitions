@@ -6,7 +6,7 @@ using namespace std;
 int main(){
 
     unsigned int a , b, c;
-    while(!cin.eof() && cin >> a >> b){
+    while(cin >> a >> b){
         c = 0;
         for(int i = 0; i < 32 ; ++i){
             if((a & 1<<i) && (b & 1<<i)) continue;

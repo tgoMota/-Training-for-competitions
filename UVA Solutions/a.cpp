@@ -1,3 +1,5 @@
+//https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2507
+//UVA 11512 - GATTACA
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -23,7 +25,7 @@ const int mod = 1e9+7;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
-//CHECK THE CONSTRAINTS, PLEASE
+
 struct suffixArray{
   string s;
   int N;
@@ -31,7 +33,7 @@ struct suffixArray{
   vector<int> LCP, PLCP, Phi;
   suffixArray(){}
   suffixArray(string _s){
-    s = _s;
+    s = _s + "$";
     N = (int)s.size();
     SA.assign(N, 0);
     tempSA.assign(N, 0);
@@ -47,18 +49,18 @@ struct suffixArray{
   }
 
   void countingSort(int k){
-    int maxi = max(N, 256);
+    int maxi = max(256, N);
     c.assign(maxi, 0);
-    for(int i = 0; i < N ; ++i) ++c[RA[(i+k)%N]];
+    for(int i = 0; i < N; ++i) ++c[RA[(i+k)%N]];
     for(int i = 1; i < maxi ; ++i) c[i]+=c[i-1];
-    for(int i = 0; i < maxi ; ++i) tempSA[--c[RA[(SA[i]+k)%N]]] = SA[i];
-    SA.swap(tempSA);
+    for(int i = N-1; i >= 0 ; --i) tempSA[--c[RA[(SA[i]+k)%N]]] = SA[i];
+    tempSA.swap(SA);
   }
 
   void buildSA(){
     for(int i = 0; i < N ; ++i){
-      RA[i] = s[i];
       SA[i] = i;
+      RA[i] = s[i];
     }
 
     for(int k = 1; k < N ; k<<=1){
@@ -69,25 +71,59 @@ struct suffixArray{
       for(int i = 1; i < N ; ++i){
         tempRA[SA[i]] = (ii(RA[SA[i]], RA[(SA[i]+k)%N]) == ii(RA[SA[i-1]], RA[(SA[i-1]+k)%N]) ? r : ++r);
       }
+
       RA.swap(tempRA);
       if(RA[SA[N-1]] == N-1) break;
     }
   }
 
   void buildLCP(){
-    
-  }
-
-};
-int main(){
-    fastio();
-    int n;
-    while(cin >> n && n){
-      vector<string> v(n);
-      for(int i = 0; i < n ; ++i){
-        cin >> v[i];
+    Phi[SA[0]] = -1;
+    for(int i = 1; i < N ; ++i) Phi[SA[i]] = SA[i-1];
+    for(int i = 0, k = 0; i < N ; ++i){
+      if(Phi[i] == -1){
+        PLCP[i] = 0;
+        continue;
       }
 
+      while(s[i+k] == s[Phi[i]+k]) k++;
+      PLCP[i] = k;
+      k = max(k-1, 0);
+    }
+    for(int i = 0; i < N ; ++i) LCP[i] = PLCP[SA[i]];
+  }
+};
+
+//CHECK THE CONSTRAINTS, PLEASE
+int main(){
+    fastio();
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        string s;
+        cin >> s;
+        suffixArray SA(s);
+        int ans = 0, cnt = 0;
+        bool ok = false;
+        for(int i = 0; i < (int)SA.LCP.size(); ++i){
+          if(SA.LCP[i] > ans){
+              ans = SA.LCP[i];
+              cnt = 1;
+              ok = true;
+          }
+          if(SA.LCP[i] == ans && ok) cnt++;
+          else ok = false;
+        }
+        if(!ans){
+          cout << "No repetitions found!\n";
+          continue;
+        }
+        for(int i = 0; i < (int)SA.LCP.size() ; ++i){
+          if(SA.LCP[i] == ans){
+            cout << s.substr(SA.SA[i], SA.LCP[i]) << " " << cnt << '\n';
+            break;
+          }
+        }
     }
     return 0;
 }

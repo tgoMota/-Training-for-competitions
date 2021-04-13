@@ -18,90 +18,46 @@ void __f(const char* names, Arg1&& arg1, Args&&... args){
   __f(comma + 1, args...);
 }
 typedef pair<int,int> ii;
-struct suffixArray{
-    vector<int> SA, tempSA, RA, tempRA, c;
-    vector<int> LCP, Phi, PLCP;
-    string s;
-    int N;
-    suffixArray(){}
-    suffixArray(string _s){
-        s = _s + "!";
-        N = (int)s.size();
-        SA.assign(N, 0);
-        RA.assign(N, 0);
-        tempSA.assign(N, 0);
-        tempRA.assign(N, 0);
-        LCP.assign(N, 0);
-        Phi.assign(N, 0);
-        PLCP.assign(N, 0);
-        buildSA();
-        buildLCP();
-        SA.erase(SA.begin());
-        LCP.erase(LCP.begin());
-    }
-
-    void countingSort(int k){
-        int sum = 0, maxi =  max(300,N);
-        c.assign(maxi, 0);
-        for(int i = 0; i < N ; ++i) c[RA[(i+k)%N]]++;
-        for(int i = 1; i < maxi ; ++i) c[i]+=c[i-1];
-        for(int i = N-1 ; i >= 0 ; --i) tempSA[--c[RA[(SA[i]+k)%N]]] = SA[i];
-        SA = tempSA;
-    }
-
-    void buildSA(){
-        for(int i = 0; i < N ; ++i) {
-            SA[i] = i;
-            RA[i] = s[i];
+const int MAXN = 500010;
+int n;
+string str;
+int SA[MAXN], ord[MAXN], nord[MAXN], cnt[MAXN], aux[MAXN];
+int rev[MAXN], LCP[MAXN];
+void getSA() {
+    for (int i = 0; i < n; i++) ord[i] = str[i];
+    int p = 1, pnt = 1;
+    while (1) {
+        memset(cnt, 0, sizeof(cnt));
+        for (int i = 0; i < n; i++) cnt[ord[min(i + p, n)]]++;
+        for (int i = 1; i <= max(n, 255); i++) cnt[i] += cnt[i - 1];
+        for (int i = n - 1; i >= 0; i--) aux[--cnt[ord[min(i + p, n)]]] = i;
+        memset(cnt, 0, sizeof(cnt));
+        for (int i = 0; i < n; i++) cnt[ord[i]]++;
+        for (int i = 1; i <= max(n, 255); i++) cnt[i] += cnt[i - 1];
+        for (int i = n - 1; i >= 0; i--) SA[--cnt[ord[aux[i]]]] = aux[i];
+        if (pnt == n) break;
+        pnt = 1;
+        nord[SA[0]] = 1;
+        for (int i = 1; i < n; i++) {
+            if (ord[SA[i - 1]] != ord[SA[i]] || ord[SA[i - 1] + p] != ord[SA[i] + p]) pnt++;
+            nord[SA[i]] = pnt;
         }
-        for(int k = 1; k < N ; k <<= 1){
-            countingSort(k);
-            countingSort(0);
-            int r = tempRA[SA[0]] = 0;
-            for(int i = 1; i < N ; ++i){
-                tempRA[SA[i]] =  (ii(RA[SA[i]], RA[(SA[i]+k)%N]) == ii(RA[SA[i-1]], RA[(SA[i-1]+k)%N]) ? r : ++r);
-            }
-            RA = tempRA;
-            if(RA[SA[N-1]] == N-1) break;
+        memcpy(ord, nord, sizeof(int) * n);
+        p <<= 1;
+    }
+}
+void getLCP() {
+    for (int i = 0; i < n; i++) rev[SA[i]] = i;
+    int h = 0;
+    for (int i = 0; i < n; i++) {
+        if (rev[i]) {
+            int prv = SA[rev[i] - 1];
+            while (str[prv + h] == str[i + h]) h++;
+            LCP[rev[i]] = h;
         }
+        h = max(h - 1, 0);
     }
-
-    void buildLCP(){
-        Phi[SA[0]] = -1;
-        for(int i = 1; i < N ; ++i) Phi[SA[i]] = SA[i-1];
-        for(int i = 0, k = 0; i < N ; ++i){
-            if(Phi[i] == -1){
-                PLCP[i] = 0;
-                continue;
-            }
-            while(s[i+k] == s[Phi[i]+k]) ++k;
-            PLCP[i] = k;
-            k = max(k-1,0);
-        }
-        for(int i = 0; i < N ; ++i) LCP[i] = PLCP[SA[i]];
-    }
-
-    void printSA(){
-        cout << "SA: ";
-        for(int i = 0; i < N ; ++i) cout << SA[i] << ' ';
-        cout << '\n';
-    }
-
-    void printLCP(){
-        trace(s);
-        cout << "LCP: ";
-        for(int i = 0; i < LCP.size() ; ++i) cout << LCP[i] << ' ';
-        cout << '\n';
-        cout << "IDX: ";
-        for(int i = 0; i < LCP.size() ; ++i) cout << i << ' ';
-        cout << '\n';
-    }
-
-    void printAllSu(){
-        for(int i = 0; i < SA.size() ; ++i) cout << SA[i] << ": " <<s.substr(SA[i], LCP[i]) << '\n';
-    }
-};
-unordered_map<char,int> firstOc;
+}
 string line;
 
 struct minqueue{
@@ -134,7 +90,6 @@ struct minqueue{
 int main(){
     int k;
     getline(cin, line);
-    for(char& c : line) if(c == ' ') c = '$';
 
     cin >> k;
     if(k > (int)line.size()){
@@ -145,30 +100,26 @@ int main(){
         cout << line << '\n';
         return 0;
     }
-    suffixArray SA(line);
+    getSA();
     minqueue q;
-    //SA.printSA();
-    //SA.printLCP();
-    //SA.printAllSu();
     int best = 0;
-    for(int i = 0; i < (int)SA.SA.size() ; ++i){
+    for(int i = 0; i < (int)line.size() ; ++i){
         if(i < k-1){
-            q.push(SA.LCP[i]);
+            q.push(LCP[i]);
             continue;
         }
         best = max(best, q.getMin());
         q.pop();
-        q.push(SA.LCP[i]);
+        q.push(LCP[i]);
     }
     best = max(best, q.getMin());
-    
-    int posmin = oo;
-    for(int i = 1; i < (int)SA.SA.size() ; ++i){
-        if(SA.LCP[i] == best) posmin = min(posmin, min(SA.SA[i-1], SA.SA[i]));
+    int minpos = oo;
+    for(int i = 0; i < (int)line.size() && best ; ++i){
+       if(LCP[i] == best){
+         while(i < (int)line.size() && LCP[i] >= best) minpos = min(minpos, min(SA[i-1], SA[i])), ++i;
+       }
     }
-    for(char& c : line) if(c == '$') c = ' ';
-    //trace(best, posmin, line, line.size(), SA.SA.size(), SA.LCP.size());
-    if(best > 0) cout << line.substr(posmin, best) << '\n';
+    if(best) cout << line.substr(minpos, best) << '\n';
     else cout << ":)\n";
     return 0;
 }
