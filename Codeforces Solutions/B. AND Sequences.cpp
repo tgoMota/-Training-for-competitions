@@ -1,5 +1,5 @@
-//https://codeforces.com/problemset/problem/1463/B
-//B. Find The Array
+//https://codeforces.com/problemset/problem/1513/B
+//B. AND Sequences 
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,6 +26,10 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+ll fat(int x){
+  if(x <= 1) return 1;
+  return (x*(fat(x-1)%mod))%mod;
+}
 int main(){
     fastio();
     int t;
@@ -34,25 +38,13 @@ int main(){
         int n;
         cin >> n;
         vector<int> v(n);
-        for(int& x : v) cin >> x;
-        ll sum1 = 0LL, sum2 = 0LL;
-        for(int i = 0; i < n ; ++i){
-          if(i%2){
-            sum1 += v[i]-1;
-          }else{
-            sum2+=v[i]-1;
-          }
-        }
-        for(int i = 0; i < n ; ++i){
-          if(i%2){
-            if(sum1 < sum2) cout << 1 << ' ';
-            else cout << v[i] << ' ';
-          }else{
-            if(sum1 < sum2) cout << v[i] << ' ';
-            else cout << 1 << ' ';
-          }
-        }
-        cout << '\n';
+        int mx = oo;
+        for(int& x : v) cin >> x, mx = min(mx, x);
+        ll cnt = 0LL;
+        for(int x : v) if(x == mx) cnt++;
+        for(int x : v) if((mx&x) != mx) cnt = 1LL;
+        cout << (((cnt*(cnt-1))%mod*(fat(n-2)))%mod) << '\n';
     }
     return 0;
 }
+
