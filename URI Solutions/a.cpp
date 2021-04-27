@@ -1,5 +1,3 @@
-//https://www.urionlinejudge.com.br/judge/pt/problems/view/2287
-//URI 2287 - Proteja sua Senha
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,43 +24,35 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-const int MAXM = 6;
-int hashc(char c){
-  return c-'A';
+int dx[] = {0,0,1,-1}, dy[] = {1,-1,0,0};
+int n, m;
+vector<string> grid;
+
+void dfs(int i, int j){
+  if(grid[i][j] == 'o') return;
+  grid[i][j] = 'o';
+  for(int x = 0; x < 4 ; ++x){
+    int px = dx[x] + i;
+    int py = dy[x] + j;
+    if(px < 0 || px >= n || py < 0 || py >= m) continue;
+    dfs(px, py);
+  }
 }
+
 int main(){
     fastio();
-    int n, t = 0;
-    while(cin >> n && n){
-      vector<vector<ii>> v(n, vector<ii>(5, ii()));
-      vector<string> password(n, "");
-      for(int i = 0; i < n ; ++i){
-
-        for(int j = 0; j < 5 ; ++j) cin >> v[i][j].first >> v[i][j].second;
-        for(int j = 0; j < MAXM ; ++j){
-          char c;
-          cin >> c;
-          password[i]+=c;
-        }
+    cin >> n >> m;
+    grid.resize(n);
+    for(string& x : grid) cin >> x;
+    int ans = 0;
+    for(int i = 0; i < n ; ++i){
+      for(int j = 0; j < m ; ++j){
+        if(grid[i][j] == 'o') continue;
+        dfs(i,j);
+        ans++;
       }
-
-      cout << "Teste " << ++t << '\n';
-      vector<int> ans;
-      for(int i = 0; i < MAXM ; ++i){
-        ii op = v[0][hashc(password[0][i])];
-        bool ok = true;
-        for(int j = 1; j < n ; ++j){
-          if (op.first != v[j][hashc(password[j][i])].first && op.first != v[j][hashc(password[j][i])].second) ok = false;
-        }
-
-        if(ok) ans.push_back(op.first);
-        else ans.push_back(op.second);
-      }
-
-      for(int i = 0; i < MAXM ; ++i){
-        cout << ans[i] << " ";
-      }
-      cout << "\n\n";
     }
+    cout << ans << '\n';
     return 0;
 }
+
