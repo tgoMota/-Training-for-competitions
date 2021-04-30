@@ -1,5 +1,3 @@
-//https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2285
-//UVA 11310 - Delivery Debacle
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,20 +24,33 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+vector<int> primes;
+vector<bool> isPrime;
+void sieve(int n){
+  isPrime.assign(n+1, true);
+  isPrime[0] = isPrime[1] = false;
+  for(int i = 2; i <= n ; ++i){
+    if(isPrime[i]){
+      primes.push_back(i);
+      for(int j = i*i; j <= n ; j += i) isPrime[j] = false;
+    }
+  }
+}
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        int n;
-        cin >> n;
-        vector<ll> dp(41, 1LL);
-        dp[2] = 5LL;
-        for(int i = 3; i <= n ; i++){
-          dp[i] = dp[i-1] + 4*dp[i-2] + 2*dp[i-3];
-        }
-        cout << dp[n] << '\n';
+    int n;
+    cin >> n;
+    sieve(n);
+    int ans = 0;
+    for(int i = 2; i <= n ; ++i){
+      int cnt = 0;
+      for(int x : primes){
+        if(x > i || cnt > 2) break;
+        if(i % x == 0) cnt++;
+      }
+      if(cnt == 2) ans++;
     }
+
+    cout << ans << '\n';
     return 0;
 }
-
