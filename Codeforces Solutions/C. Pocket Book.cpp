@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/contest/152/problem/C
+//C. Pocket Book
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,23 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int n;
-    cin >> n;
-    ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
+    int n, m;
+    cin >> n >> m;
+    vector<string> v(n);
+    for(int i = 0; i < n ; ++i){
+      cin >> v[i];
+    }
+    ll ans = 1LL;
+    for(int j = 0; j < m ; ++j){
+      set<char> s;
+      for(int i = 0; i < n ; ++i){
+        if(s.find(v[i][j])!= s.end()) continue;
+        s.insert(v[i][j]);
+      }
+      ans*=(ll)s.size();
+      ans%=mod;
+    }
+
     cout << ans << '\n';
     return 0;
 }

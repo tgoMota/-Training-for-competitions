@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/contest/978/problem/E
+//E. Bus Video System
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,19 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int n;
-    cin >> n;
-    ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
+    ll n, m;
+    cin >> n >> m;
+    ll minx = oo, maxx = -oo, sum = 0LL;
+    for(int i = 0; i < n ; ++i){
+      int x;
+      cin >> x;
+      sum+=x;
+      minx = min(minx, sum);
+      maxx = max(maxx, sum);
+    }
+    minx = min(minx, 0LL);
+    maxx = max(maxx, 0LL);
+    ll ans = max(m-maxx+minx+1, 0LL);
     cout << ans << '\n';
     return 0;
 }

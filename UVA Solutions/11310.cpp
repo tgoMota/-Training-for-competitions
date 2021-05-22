@@ -1,5 +1,3 @@
-//https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2285
-//UVA 11310 - Delivery Debacle
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -42,4 +40,3 @@ int main(){
     }
     return 0;
 }
-

@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/contest/629/problem/A
+//A. Far Relative’s Birthday Cake
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -30,8 +30,23 @@ int main(){
     fastio();
     int n;
     cin >> n;
+    vector<string> grid(n);
+    for(int i = 0; i < n ; ++i){
+      cin >> grid[i];
+    }
+    int rows = 0, cols = 0;
     ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
+    for(int i = 0; i < n ; ++i){
+      rows = 0, cols = 0;
+      for(int j = 0; j < n ; ++j){
+        rows+=grid[i][j]!='.';
+        cols+=grid[j][i]!='.';
+      }
+      ans+=rows*1LL*(rows-1)/2LL;
+      ans+=cols*1LL*(cols-1)/2LL;
+    }
+
     cout << ans << '\n';
+
     return 0;
 }

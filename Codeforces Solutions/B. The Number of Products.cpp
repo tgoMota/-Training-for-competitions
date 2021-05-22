@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/problemset/problem/1215/B
+//B. The Number of Products
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -30,8 +30,14 @@ int main(){
     fastio();
     int n;
     cin >> n;
-    ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
-    cout << ans << '\n';
+    int pos = 1, neg = 0, sig = 1;
+    for(int i = 0; i < n ; ++i){
+      int x;
+      cin >> x;
+      if(x < 0) sig*=-1;
+      if(sig > 0) pos++;
+      else neg++;
+    }
+    cout << pos*1LL*neg << " " << n*1LL*(n+1)/2-pos*1LL*neg << '\n';
     return 0;
 }

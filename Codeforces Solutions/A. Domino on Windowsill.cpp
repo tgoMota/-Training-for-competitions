@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/contest/1499/problem/A
+//A. Domino on Windowsill
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -28,10 +28,18 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int n;
-    cin >> n;
-    ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
-    cout << ans << '\n';
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int n, k1, k2;
+        cin >> n >> k1 >> k2;
+        int w, b;
+        cin >> w >> b;
+        if((k1+k2 < 2*w) || (2*n-k1-k2 < 2*b)){
+          cout << "NO\n";
+          continue;
+        }
+        cout << "YES\n";
+    }
     return 0;
 }

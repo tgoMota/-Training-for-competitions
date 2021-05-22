@@ -1,5 +1,5 @@
-//https://codeforces.com/contest/630/problem/C
-//C. Lucky Numbers
+//https://codeforces.com/problemset/problem/131/C
+//C. The World is a Theatre
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,12 +26,26 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+
+ll dp[105][105];
+
+ll nc(int i, int j){
+  if(j > i) return 0LL;
+  if(j == 0 || i == j) return 1LL;
+  ll& ans = dp[i][j];
+  if(ans != -1) return ans;
+  return ans = nc(i-1,j) + nc(i-1,j-1);
+}
+
 int main(){
     fastio();
-    int n;
-    cin >> n;
+    ll n, m, t;
+    cin >> n >> m >> t;
     ll ans = 0LL;
-    for(int i = 1; i <= n ; ++i) ans+= 1LL << i;
+    memset(dp, -1, sizeof(dp));
+    for(int a = 4; a + 1 <= t ; ++a){
+      ans += nc(n,a) * nc(m, t-a);
+    }
     cout << ans << '\n';
     return 0;
 }
