@@ -1,5 +1,3 @@
-//https://codeforces.com/problemset/problem/1166/A
-//A. Silent Classroom
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,24 +24,13 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+ll nc(ll x){
+  return x*(x-1)/2;
+}
 int main(){
     fastio();
-    int n;
-    cin >> n;
-    unordered_map<char,int> cnt;
-    for(int i = 0; i < n ; ++i){
-      string x;
-      cin >> x;
-      cnt[x[0]]++;
-    }
-
-    ll ans = 0LL;
-    for(auto x : cnt){ 
-      ll c = x.second/2;
-      if(c*2 == x.second) ans+= c*(c-1);
-      else ans+=c*c;
-    }
-
-    cout << ans << '\n';
+    ll n, m;
+    cin >> n >> m;
+    cout << ((n/m)*nc(n/m)+(n%m)*nc(n/m+1)) << " " << nc(n-m+1) << '\n';
     return 0;
 }
