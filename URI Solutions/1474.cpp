@@ -27,8 +27,11 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 ll N, K, L;
 typedef vector<vector<ll>> mat;
-mat identity = {{1,0},{0,1}};
-
+mat identity(const int n){
+  mat m(n, vector<ll>(n,0LL));
+  for(int i = 0; i < n ; ++i) m[i][i] = 1LL;
+  return m;
+}
 mat mul(mat& a, mat& b){
   mat c((int)a.size(), vector<ll>((int)b[0].size(), 0LL));
   for(int i = 0; i < (int)a.size() ;  ++i){
@@ -43,7 +46,7 @@ mat mul(mat& a, mat& b){
 }
 
 mat powMat(mat a, ll n){
-  if(n == 0) return identity;
+  if(n == 0) return identity((int)a.size());
   mat b = powMat(a, n/2);
   b = mul(b,b);
   if(n%2) b = mul(b,a);
@@ -54,15 +57,17 @@ int main(){
     fastio();
     mat a, b, c, d;
     while(cin >> N  >> K >> L){
+      //recurrence: f(n) = K*f(n-1) + L*f(n-2)
       N/=5LL;
       K%=mod;
       L%=mod;
-      a = {{1, K}};
-      b = {{0,L},{1,K}};
-      d = powMat(b, N);
+      a = {{1, K, 0}};
+      b = {{0,L,1},{1,K,0},{0,0,0}};
+      d = powMat(b, N-1);
       mat c = mul(a,d);
-      cout << setfill('0') << setw(6) << c[0][0] << '\n';
+      cout << setfill('0') << setw(6) << c[0][1] << '\n';
     }
     return 0;
 }
+
 
