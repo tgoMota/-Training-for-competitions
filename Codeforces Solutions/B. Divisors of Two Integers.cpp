@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1108/problem/B
+//B. Divisors of Two Integers
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,12 +28,26 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        int n, m;
-        cin >> n >> m;
-        
+    int n;
+    cin  >> n;
+    map<int,int> cnt;
+    int mx = -oo, x;
+    for(int i = 0; i < n ; ++i) {
+      cin >> x;
+      cnt[x]++;
+      mx = max(mx, x);
     }
+    int secondMx = -1, secondAns = -1;
+    bool has = false;
+    for(auto x : cnt){
+      if(x.second == 1) {
+        if(mx%x.first) secondMx = max(secondMx, x.first);
+        has = true;
+      }else secondAns = x.first;
+    }
+    cout << mx << ' ';
+    if(!has) cout << mx << '\n';
+    else if(secondMx != -1) cout << secondMx << '\n';
+    else cout << secondAns << '\n';
     return 0;
 }

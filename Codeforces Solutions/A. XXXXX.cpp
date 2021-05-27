@@ -1,3 +1,5 @@
+//https://codeforces.com/problemset/problem/1364/A
+//A. XXXXX
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -31,7 +33,20 @@ int main(){
     for(int ti = 1; ti <= t ; ++ti){
         int n, m;
         cin >> n >> m;
-        
+        vector<int> v(n);
+        int subMax = -1, sum = 0;
+        for(int i = 0; i < n ; ++i) {
+          cin >> v[i];
+          sum+=v[i];
+          if(sum%m) subMax = i+1;
+        }
+        sum = 0;
+        for(int i = n-1 ; i >= 0 ; --i){
+          sum+=v[i];
+          if(sum%m) subMax = max(subMax, n-i);
+        }
+
+        cout << subMax << '\n';
     }
     return 0;
 }

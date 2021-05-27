@@ -1,3 +1,5 @@
+//https://codeforces.com/problemset/problem/483/A
+//A. Counterexample
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,12 +28,11 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        int n, m;
-        cin >> n >> m;
-        
-    }
+    ll a, b;
+    cin >> a >> b;
+    if(a%2 && a+3 > b) cout << -1 << '\n';
+    else if(a%2 == 0 && a+2 > b) cout << -1 << '\n';
+    else if(a%2) cout << (a+1) << " " << (a+2) << " " << (a+3) << '\n';
+    else cout << a << " " << (a+1) << " " << (a+2) << '\n';
     return 0;
 }
