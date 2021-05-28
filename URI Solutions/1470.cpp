@@ -28,7 +28,7 @@ typedef pair<int,int> ii;
 int n1, n2;
 vector<ll> in, out;
 
-vector<ll> cut(int pos, vector<ll> tmp){
+vector<ll> cut(int pos, vector<ll>& tmp){
   vector<ll> ans;
   int i, j;
   for(i = pos, j = pos+1; i >= 0 && j < (int)tmp.size() ; --i, ++j){
