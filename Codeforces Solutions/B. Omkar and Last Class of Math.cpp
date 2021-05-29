@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1372/problem/B
+//B. Omkar and Last Class of Math
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,24 +28,19 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    cout << fixed << setprecision(10);
-    string sa, sb;
-    cin >> sa >> sb;
-    const int N = (int)sa.size();
-    const int M = (int)sb.size();
-    int pos = 0;
-    for(int i = 0; i < N ; ++i) pos+= sa[i] == '+' ? 1 : -1;
-    int posb = 0, cnt = 0;
-    for(int i = 0; i < M ; ++i){
-      if(sb[i] != '?') posb+= sb[i] == '+' ? 1 : -1;
-      else cnt++;
-    }
-    int dif = abs(pos-posb);
-    int tot = 0;
-    for(int plus = 0; plus <= dif ; ++plus){
-      tot+=
-    }
-    
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int n;
+        cin >> n;
+        int mx = 1;
+        for(int i = 2; i*i <= n ; ++i){
+          if(n%i) continue;
+          mx = n/i;
+          break;
+        }
 
+        cout << mx << " " << n-mx << '\n';
+    }
     return 0;
 }

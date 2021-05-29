@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1521/problem/B
+//B. Nastia and a Good Array
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,26 +26,32 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+
 int main(){
     fastio();
-    cout << fixed << setprecision(10);
-    string sa, sb;
-    cin >> sa >> sb;
-    const int N = (int)sa.size();
-    const int M = (int)sb.size();
-    int pos = 0;
-    for(int i = 0; i < N ; ++i) pos+= sa[i] == '+' ? 1 : -1;
-    int posb = 0, cnt = 0;
-    for(int i = 0; i < M ; ++i){
-      if(sb[i] != '?') posb+= sb[i] == '+' ? 1 : -1;
-      else cnt++;
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int n;
+        cin >> n;
+        vector<int> v(n);
+        int mx = oo, p = 1;
+        for(int i = 0; i < n ; ++i){
+          cin >> v[i];
+          if(v[i] < mx){
+            mx = v[i];
+            p = i+1;
+          }
+        }
+        if(n == 1){
+          cout << 0 << '\n';
+          continue;
+        }
+        cout << n-1 << '\n';
+        for(int i = 0; i < n ; ++i){
+          if(i == p-1) continue;
+          cout << p << " " << i+1 << " " << mx << " " << mx+abs(p-i-1) << '\n';
+        }
     }
-    int dif = abs(pos-posb);
-    int tot = 0;
-    for(int plus = 0; plus <= dif ; ++plus){
-      tot+=
-    }
-    
-
     return 0;
 }

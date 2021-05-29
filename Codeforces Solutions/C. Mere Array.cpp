@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/1401/problem/C
+//C. Mere Array
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,26 +26,32 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+vector<int> v, pos;
+int mx, n;
+
+bool check(){
+  for(int i = 0; i < n ; ++i){
+    if(v[i] != pos[i] && v[i]%mx) return false;
+  }
+  return true;
+}
 int main(){
     fastio();
-    cout << fixed << setprecision(10);
-    string sa, sb;
-    cin >> sa >> sb;
-    const int N = (int)sa.size();
-    const int M = (int)sb.size();
-    int pos = 0;
-    for(int i = 0; i < N ; ++i) pos+= sa[i] == '+' ? 1 : -1;
-    int posb = 0, cnt = 0;
-    for(int i = 0; i < M ; ++i){
-      if(sb[i] != '?') posb+= sb[i] == '+' ? 1 : -1;
-      else cnt++;
-    }
-    int dif = abs(pos-posb);
-    int tot = 0;
-    for(int plus = 0; plus <= dif ; ++plus){
-      tot+=
-    }
-    
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        cin >> n;
+        v.resize(n);
+        pos.resize(n);
+        mx = oo;
+        for(int i = 0; i < n ; ++i){
+          cin >> v[i];
+          pos[i] = v[i];
+          mx = min(mx, v[i]);
+        }
 
+        sort(v.begin(), v.end());
+        cout << (check() ? "YES" : "NO") << '\n';
+    }
     return 0;
 }
