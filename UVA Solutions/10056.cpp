@@ -1,3 +1,4 @@
+//UVA 10056 - What is the Probability?
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -26,24 +27,15 @@ typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
     fastio();
-    int n, m;
-    while(cin >> n >> m){
-      vector<bool> used(3005, false);
-      cout << n << "/" << m << " = " << n/m << '.';
-      n%=m;
-      used[n] = true;
-      n*=10;
-      string dec = "";
-      for(int i = 1; i < 1000 ; ++i){
-        dec+= to_string(n/m);
-        n%=m;
-        if(used[n]) break;
-        used[n] = true;
-        n*=10;
-      }
-      cout << dec << '\n';
-
+    int t;
+    cin >> t;
+    for(int ti = 1; ti <= t ; ++ti){
+        int N, T;
+        double p;
+        cin >> N >> p >> T;
+        cout << fixed << setprecision(4);
+        if(p == 0) cout << 0.0000 << '\n';
+        else cout << p*(pow(1-p, T-1)/(1-(pow(1-p, N)))) << '\n';
     }
     return 0;
 }
-

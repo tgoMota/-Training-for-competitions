@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/476/problem/B
+//B. Dreamoon and WiFi
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -24,26 +26,25 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
-int main(){
-    fastio();
-    int n, m;
-    while(cin >> n >> m){
-      vector<bool> used(3005, false);
-      cout << n << "/" << m << " = " << n/m << '.';
-      n%=m;
-      used[n] = true;
-      n*=10;
-      string dec = "";
-      for(int i = 1; i < 1000 ; ++i){
-        dec+= to_string(n/m);
-        n%=m;
-        if(used[n]) break;
-        used[n] = true;
-        n*=10;
-      }
-      cout << dec << '\n';
 
-    }
-    return 0;
+int solve(int canUse, int curPos, const int destiny){
+  if(!canUse) return curPos == destiny;
+  return solve(canUse-1, curPos+1, destiny)+solve(canUse-1, curPos-1, destiny);
 }
 
+int main(){
+    fastio();
+    cout << fixed << setprecision(10);
+    string sa, sb;
+    cin >> sa >> sb;
+    int pos = 0, cnt = 0;
+    for(int i = 0; i < (int)sa.size() ; ++i){
+      pos+= sa[i] == '+' ? 1 : -1;
+      if(sb[i] != '?') pos+= sb[i] == '+' ? -1 : 1;
+      else cnt++;
+    }
+
+    cout << solve(cnt, 0, pos)/pow(2,cnt) << '\n';
+
+    return 0;
+}
