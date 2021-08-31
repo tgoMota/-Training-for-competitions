@@ -1,3 +1,5 @@
+//https://cses.fi/problemset/task/1666
+//Building Roads
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -21,15 +23,45 @@ void __f(const char* names, Arg1&& arg1, Args&&... args){
 }
 const int mod = 1e9+7;
 typedef long long ll;
-typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
+vector<vector<int>> adj;
+vector<bool> vst;
+
+void dfs(int v){
+  vst[v] = true;
+  for(int x : adj[v]){
+    if(vst[x]) continue;
+    dfs(x);
+  }
+}
 int main(){
     fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
+    int n,m;
+    cin >> n >> m;
+    adj.assign(n, vector<int>());
+    for(int i = 0; i < m ; ++i){
+      int a, b;
+      cin >> a >> b;
+      a--, b--;
+      adj[a].push_back(b);
+      adj[b].push_back(a);
+    }
+
+    vst.assign(n, false);
+    dfs(0);
+    vector<int> vans;
+    for(int i = 1 ; i < n ; ++i){
+      if(!vst[i]){
+        dfs(i);
+        vans.push_back(i+1);
+      }
+    }
+
+    cout << (int)vans.size() << '\n';
+    for(int x : vans){
+      cout << 1 << ' ' << x << '\n';
     }
     return 0;
 }
+

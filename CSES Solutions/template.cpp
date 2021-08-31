@@ -21,7 +21,6 @@ void __f(const char* names, Arg1&& arg1, Args&&... args){
 }
 const int mod = 1e9+7;
 typedef long long ll;
-typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
@@ -33,3 +32,4 @@ int main(){
     }
     return 0;
 }
+
