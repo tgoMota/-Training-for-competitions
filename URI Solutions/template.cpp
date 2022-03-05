@@ -25,12 +25,11 @@ typedef long double ld;
 typedef pair<int,int> ii;
 //CHECK THE CONSTRAINTS, PLEASE
 int main(){
-    fastio();
-    int t;
-    cin >> t;
-    for(int ti = 1; ti <= t ; ++ti){
-        
-    }
-    return 0;
+  fastio();
+  int t;
+  cin >> t;
+  for(int ti = 1; ti <= t ; ++ti){
+    
+  }
+  return 0;
 }
-
