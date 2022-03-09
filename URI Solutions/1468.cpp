@@ -1,3 +1,5 @@
+//https://www.beecrowd.com.br/judge/pt/problems/view/1468
+//URI 1468 - Balao
 #include <bits/stdc++.h>
 using namespace std;
 #define oo 0x3f3f3f3f
@@ -49,19 +51,13 @@ int get_val(ii a){
   else if(a.second == 3) return segments[a.first].r.x; //end
   return querys[a.first]; //query
 }
-multiset<ii, bool(*)(ii,ii)> to_sweep([](ii a, ii b){
-  int val_a = get_val(a);
-  int val_b = get_val(b);
-  if(val_a == val_b) return a.second < b.second;
-  return val_a < val_b;
-});
+vector<ii> to_sweep;
 
 set<int, bool(*)(int,int)> sweep([](int a, int b){
-  if(segments[a].l.x < segments[b].l.x) return cross(segments[a].l, segments[b].l, segments[a].r) >= 0;
+  if(segments[a].l.x < segments[b].l.x) return cross(segments[a].l, segments[b].l, segments[a].r) > 0;
   return cross(segments[b].l, segments[a].l, segments[b].r) < 0;
 });
-vector<int> nxt;
-vector<int> first_to_take;
+vector<int> nxt, first_to_take;
 bool is_aclive(seg a){
   return a.l.y < a.r.y;
 }
@@ -82,46 +78,45 @@ int main(){
   fastio();
   int n, q;
   while(cin >> n >> q){
-    sweep.clear();
     querys.resize(q);
     first_to_take.assign(q, -1);
     nxt.resize(n);
     segments.resize(n);
+    sweep.clear();
+    to_sweep.clear();
     for(int i = 0; i < n ; ++i){
       cin >> segments[i].l.x >> segments[i].l.y >> segments[i].r.x >> segments[i].r.y;
       if(segments[i].l.x > segments[i].r.x) swap(segments[i].l, segments[i].r);
-      to_sweep.insert({i,1});
-      to_sweep.insert({i,3});
+      to_sweep.push_back({i,1});
+      to_sweep.push_back({i,3});
       nxt[i] = i;
     }
     for(int i = 0; i < q ; ++i){
       cin >> querys[i];
-      to_sweep.insert({i,2});
+      to_sweep.push_back({i,2});
     }
+
+    sort(all(to_sweep), [&](ii& a, ii& b){
+      int val_a = get_val(a), val_b = get_val(b);
+      if(val_a == val_b) return a.second < b.second;
+      return val_a < val_b;
+    });
     auto get_above = [&](ii x){
-      if(sweep.empty()) return -1;
-      if(x.second == 2) return *sweep.begin();
-      auto it = sweep.find(x.first);
-      if(it == sweep.end() || ++it == sweep.end()) return -1;
-      return *it;
+      if(x.second == 2) return sweep.empty() ? -1 : *sweep.begin();
+      auto it = sweep.upper_bound(x.first);
+      return it == sweep.end() ? -1 : *it;
     };
 
-    while(!to_sweep.empty()){
-      ii x = *to_sweep.begin();
-      to_sweep.erase(to_sweep.begin());
+    for(ii& x : to_sweep){
       if(x.second == 1){
         sweep.insert(x.first);
-        if(is_declive(segments[x.first])){ 
-          nxt[x.first] = get_above(x);
-        }
+        if(is_declive(segments[x.first])) nxt[x.first] = get_above(x);
       }
       else if(x.second == 2){
         first_to_take[x.first] = get_above(x);
       }
       else if(x.second == 3){
-        if(is_aclive(segments[x.first])){
-          nxt[x.first] = get_above(x);
-        }
+        if(is_aclive(segments[x.first])) nxt[x.first] = get_above(x);
         sweep.erase(x.first);
       }
     }
